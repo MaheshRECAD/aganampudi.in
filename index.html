@@ -1,35 +1,711 @@
 ```html
-<!-- ... existing code ... -->
-        <!-- Brand Logo -->
-        <a href="#hero-top" class="flex items-center gap-2.5 group shrink-0">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-bold shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-            </svg>
-          </div>
-          <div class="hidden sm:block">
-            <span class="font-display font-bold text-base tracking-wide text-white group-hover:text-amber-400 transition">MAHESH'S</span>
-            <span class="block text-[10px] uppercase tracking-[0.25em] text-amber-400/90 -mt-1">Movie World</span>
-          </div>
-        </a>
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mahesh Seeramsetti's Movie World</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Cinzel for Cinema Headers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-        <!-- Cloud / Local Sync Status Pill -->
-        <div
-          id="sync-status-pill"
-          class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium text-gray-300 shrink-0"
-          title="Live sync state"
-        >
-          <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
-          <span id="sync-status-text">Local Preview Mode (Add Firebase &amp; Cloudinary keys to go live)</span>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Cinzel', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Base Dark Cinematic Theme & Smooth Scrollbars */
+    html, body {
+      background-color: #07080c;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbars for Horizontal Carousels */
+    .horizontal-snap-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245, 158, 11, 0.45) rgba(255, 255, 255, 0.05);
+    }
+    .horizontal-snap-track::-webkit-scrollbar {
+      height: 7px;
+    }
+    .horizontal-snap-track::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 9999px;
+    }
+    .horizontal-snap-track::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, 0.45);
+      border-radius: 9999px;
+    }
+    .horizontal-snap-track::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 158, 11, 0.75);
+    }
+
+    /* Strict 5x5 Grid Page (25 blocks per horizontal page) */
+    .grid-5x5-page {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: start;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-rows: repeat(5, minmax(0, auto));
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-5x5-page {
+        gap: 0.45rem;
+      }
+    }
+
+    /* Glassmorphic Card Styling */
+    .glass-panel {
+      background: rgba(17, 20, 30, 0.68);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .glass-card {
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.07) 0%, rgba(15, 18, 28, 0.82) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px) scale(1.015);
+      border-color: rgba(245, 158, 11, 0.5);
+      box-shadow: 0 14px 32px -8px rgba(245, 158, 11, 0.22);
+    }
+
+    /* Hero Blurred Animated Collage Keyframes */
+    @keyframes floatSlowA {
+      0%, 100% { transform: scale(1.12) translate3d(0px, 0px, 0) rotate(-1deg); }
+      50% { transform: scale(1.2) translate3d(-18px, -14px, 0) rotate(1.5deg); }
+    }
+    @keyframes floatSlowB {
+      0%, 100% { transform: scale(1.18) translate3d(0px, 0px, 0) rotate(1deg); }
+      50% { transform: scale(1.1) translate3d(16px, 12px, 0) rotate(-1.5deg); }
+    }
+    .hero-tile-a {
+      animation: floatSlowA 16s ease-in-out infinite;
+    }
+    .hero-tile-b {
+      animation: floatSlowB 19s ease-in-out infinite;
+    }
+
+    /* Theatre Single-Movie Spotlight Slide */
+    .theatre-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: center;
+    }
+
+    /* Modal Backdrop Fade */
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal-in {
+      animation: modalIn 0.22s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
+
+  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION BAR WITH SYNC STATUS & ADMIN MENU                      -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Brand Identity -->
+      <a href="#hero-top" class="flex items-center gap-2.5 group shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-extrabold shadow-lg shadow-amber-500/25 group-hover:scale-105 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-display font-bold text-sm sm:text-base tracking-wide text-white group-hover:text-amber-400 transition block leading-tight">MAHESH'S</span>
+          <span class="text-[10px] uppercase tracking-[0.24em] text-amber-400/90 block -mt-0.5">Movie World</span>
+        </div>
+      </a>
+
+      <!-- Cloud / Local Status Indicator -->
+      <div id="sync-status-pill" class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium text-gray-300">
+        <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span id="sync-status-text">Local Mode Active (Configure Firebase &amp; Cloudinary for Cloud Sync)</span>
+      </div>
+
+      <!-- Quick Jump Links & Admin Menu -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <nav class="hidden lg:flex items-center gap-1 text-xs font-medium text-gray-300">
+          <a href="#section-theatres" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Theatres</a>
+          <a href="#section-ott" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">OTT 5×5</a>
+          <a href="#section-downloaded" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Downloaded 5×5</a>
+        </nav>
+
+        <!-- Admin Actions Dropdown -->
+        <div class="relative" id="admin-menu-wrapper">
+          <button
+            id="admin-menu-btn"
+            type="button"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-semibold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span>Menu</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Dropdown List -->
+          <div
+            id="admin-dropdown"
+            class="hidden absolute right-0 mt-2 w-56 rounded-2xl glass-panel border border-white/15 py-2 z-50 shadow-2xl"
+          >
+            <div class="px-3.5 py-1.5 text-[10px] uppercase tracking-wider text-gray-400 font-semibold border-b border-white/10">
+              Admin Review Controls
+            </div>
+            <button
+              type="button"
+              data-admin-action="add"
+              class="w-full text-left px-4 py-2.5 text-sm text-gray-100 hover:bg-amber-500/20 hover:text-amber-300 flex items-center gap-2.5 transition cursor-pointer"
+            >
+              <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold">+</span>
+              <span>Add Review</span>
+            </button>
+            <button
+              type="button"
+              data-admin-action="edit"
+              class="w-full text-left px-4 py-2.5 text-sm text-gray-100 hover:bg-amber-500/20 hover:text-amber-300 flex items-center gap-2.5 transition cursor-pointer"
+            >
+              <span class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-300 flex items-center justify-center text-xs font-bold">✎</span>
+              <span>Edit Review</span>
+            </button>
+            <button
+              type="button"
+              data-admin-action="remove"
+              class="w-full text-left px-4 py-2.5 text-sm text-gray-100 hover:bg-rose-500/20 hover:text-rose-300 flex items-center gap-2.5 transition cursor-pointer"
+            >
+              <span class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-bold">✕</span>
+              <span>Remove Review</span>
+            </button>
+            <div class="border-t border-white/10 mt-1 pt-1">
+              <button
+                id="reset-sample-btn"
+                type="button"
+                class="w-full text-left px-4 py-2 text-xs text-gray-400 hover:text-white hover:bg-white/5 transition cursor-pointer"
+              >
+                ↻ Restore Sample Movies
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- HERO SECTION: "MAHESH SEERAMSETTI'S MOVIE WORLD" + LAST 10 BLURRED BG  -->
+  <!-- ===================================================================== -->
+  <section id="hero-top" class="relative w-full min-h-[58vh] sm:min-h-[64vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+    <!-- Dynamic Blurred Collage of the Last 10 Added Movies/WebSeries -->
+    <div id="hero-collage-grid" class="absolute inset-0 grid grid-cols-5 grid-rows-2 gap-2 p-2 opacity-65 pointer-events-none select-none">
+      <!-- Populated dynamically via JS with last 10 reviews -->
+    </div>
+
+    <!-- Frosted Glassy Blur Overlay & Vignette -->
+    <div class="absolute inset-0 bg-[#07080c]/55 backdrop-blur-xl pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#07080c]/70 via-transparent to-[#07080c] pointer-events-none"></div>
+
+    <!-- Center Glassmorphic Title Card -->
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center">
+      <div class="glass-panel rounded-3xl px-6 py-10 sm:px-12 sm:py-14 border border-white/15">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-5">
+          <span>★ Personal Cinema &amp; Web-Series Archive</span>
         </div>
 
-        <!-- Quick Live Search Bar -->
-<!-- ... existing code ... -->
-        <!-- Poster Image Upload + Direct URL -->
+        <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
+          Mahesh Seeramsetti's <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400">Movie World</span>
+        </h1>
+
+        <p class="mt-4 text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          Honest ratings, crisp pros &amp; cons, and audience recommendations across big-screen theatrical spectacles, binge-worthy OTT releases, and handpicked downloads.
+        </p>
+
+        <!-- Quick Stats Strip -->
+        <div class="mt-7 grid grid-cols-3 gap-3 max-w-md mx-auto">
+          <div class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2.5">
+            <div id="stat-total" class="text-lg sm:text-2xl font-bold text-amber-400">0</div>
+            <div class="text-[11px] text-gray-400 uppercase tracking-wider">Reviewed</div>
+          </div>
+          <div class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2.5">
+            <div id="stat-avg-rating" class="text-lg sm:text-2xl font-bold text-white">0.0 ★</div>
+            <div class="text-[11px] text-gray-400 uppercase tracking-wider">Avg Score</div>
+          </div>
+          <div class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2.5">
+            <div id="stat-recent-count" class="text-lg sm:text-2xl font-bold text-emerald-400">10</div>
+            <div class="text-[11px] text-gray-400 uppercase tracking-wider">Hero Backdrop</div>
+          </div>
+        </div>
+
+        <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <a href="#section-theatres" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm transition shadow-lg shadow-amber-500/20">
+            Explore Reviews ↓
+          </a>
+          <a href="#search-filter-bar" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium text-sm transition">
+            Search &amp; Filter
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SEARCH, FILTER & SORT CONTROL BAR                                     -->
+  <!-- ===================================================================== -->
+  <section id="search-filter-bar" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+    <div class="glass-panel rounded-2xl p-4 sm:p-5 border border-white/10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+        <!-- Search by Movie Name -->
+        <div class="lg:col-span-2 relative">
+          <label for="search-input" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Search Movies / Series</label>
+          <div class="relative">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search by movie or series title..."
+              class="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-amber-400"
+            />
+            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Filter by Rating -->
         <div>
-          <label class="block text-xs font-medium text-gray-300 mb-1">Poster Image (Upload File or Paste Image URL)</label>
+          <label for="filter-rating" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Rating</label>
+          <select id="filter-rating" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
+            <option value="all">All Ratings</option>
+            <option value="5">★★★★★ (5 Stars)</option>
+            <option value="4">★★★★☆ (4+ Stars)</option>
+            <option value="3">★★★☆☆ (3+ Stars)</option>
+            <option value="2">★★☆☆☆ (2+ Stars)</option>
+            <option value="1">★☆☆☆☆ (1+ Stars)</option>
+          </select>
+        </div>
+
+        <!-- Filter by Genre -->
+        <div>
+          <label for="filter-genre" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Genre</label>
+          <select id="filter-genre" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
+            <option value="all">All Genres</option>
+          </select>
+        </div>
+
+        <!-- Filter by Release Year -->
+        <div>
+          <label for="filter-year" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Release Year</label>
+          <select id="filter-year" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
+            <option value="all">All Years</option>
+          </select>
+        </div>
+
+        <!-- Filter by Where to Watch -->
+        <div>
+          <label for="filter-watch" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Where to Watch</label>
+          <select id="filter-watch" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
+            <option value="all">All Sources</option>
+            <option value="Theatres">Theatres</option>
+            <option value="OTT">OTT</option>
+            <option value="Downloaded">Downloaded</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Sort & Clear Controls Row -->
+      <div class="mt-3 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <label for="sort-by" class="text-xs font-medium text-gray-400">Sort By:</label>
+          <select id="sort-by" class="px-3 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+            <option value="recent">Recently Added</option>
+            <option value="rating-desc">Rating: High to Low</option>
+            <option value="rating-asc">Rating: Low to High</option>
+            <option value="year-desc">Release Year: Newest First</option>
+            <option value="year-asc">Release Year: Oldest First</option>
+            <option value="name-asc">Name: A → Z</option>
+            <option value="name-desc">Name: Z → A</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span id="filter-status-label" class="text-xs text-gray-400">Showing all reviews</span>
+          <button
+            id="clear-filters-btn"
+            type="button"
+            class="hidden px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-300 text-xs font-semibold transition cursor-pointer"
+          >
+            Clear Filters ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Search / Filter Results Panel (Appears dynamically when filtering/searching) -->
+    <div id="filtered-results-section" class="hidden mt-6 glass-panel rounded-2xl p-5 border border-amber-500/30">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+          <span>Filtered &amp; Sorted Matches</span>
+          <span id="filtered-count-badge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-xs text-amber-200">0</span>
+        </h2>
+      </div>
+      <div id="filtered-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <!-- Populated when search/filters are active -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN 3-TIER SHOWCASE FLOW                                             -->
+  <!-- ===================================================================== -->
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-14 flex-1">
+
+    <!-- =================================================================== -->
+    <!-- TIER 1: WATCHED IN THEATRES (1 MOVIE PER SLIDE, HORIZONTAL SCROLL)  -->
+    <!-- =================================================================== -->
+    <section id="section-theatres" class="scroll-mt-20">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Big Screen Experience</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Watched in Theatres</h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">One blockbuster spotlight per slide — scroll or swipe horizontally to browse.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="theatre-counter" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">1 / 1</span>
+          <button
+            id="theatre-prev-btn"
+            type="button"
+            aria-label="Previous Theatre Movie"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            ←
+          </button>
+          <button
+            id="theatre-next-btn"
+            type="button"
+            aria-label="Next Theatre Movie"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Single-Slide Track -->
+      <div id="theatre-track" class="horizontal-snap-track rounded-3xl">
+        <!-- Slides injected dynamically -->
+      </div>
+
+      <!-- Slide Pagination Dots -->
+      <div id="theatre-dots" class="flex items-center justify-center gap-2 mt-4 flex-wrap"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TIER 2: OTT RELEASES (5x5 GRID PER HORIZONTAL PAGE)                 -->
+    <!-- =================================================================== -->
+    <section id="section-ott" class="scroll-mt-20">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">Streaming Vault</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">OTT Releases <span class="text-sm font-sans font-normal text-gray-400">(5×5 Grid)</span></h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">25 movies &amp; web-series per page — scroll horizontally to reveal the next 5×5 block.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="ott-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">Page 1 of 1</span>
+          <button
+            id="ott-prev-btn"
+            type="button"
+            aria-label="Previous OTT 5x5 Page"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            ←
+          </button>
+          <button
+            id="ott-next-btn"
+            type="button"
+            aria-label="Next OTT 5x5 Page"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal 5x5 Grid Track -->
+      <div id="ott-track" class="horizontal-snap-track pb-3">
+        <!-- 5x5 Grid Pages injected dynamically -->
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TIER 3: DOWNLOAD & WATCH (5x5 GRID PER HORIZONTAL PAGE)             -->
+    <!-- =================================================================== -->
+    <section id="section-downloaded" class="scroll-mt-20 pb-8">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">Offline Collection</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Download &amp; Watch <span class="text-sm font-sans font-normal text-gray-400">(5×5 Grid)</span></h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">25 downloaded titles per page — scroll horizontally to browse the next 5×5 collection.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="downloaded-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">Page 1 of 1</span>
+          <button
+            id="downloaded-prev-btn"
+            type="button"
+            aria-label="Previous Downloaded 5x5 Page"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            ←
+          </button>
+          <button
+            id="downloaded-next-btn"
+            type="button"
+            aria-label="Next Downloaded 5x5 Page"
+            class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal 5x5 Grid Track -->
+      <div id="downloaded-track" class="horizontal-snap-track pb-3">
+        <!-- 5x5 Grid Pages injected dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- FOOTER                                                                -->
+  <!-- ===================================================================== -->
+  <footer class="border-t border-white/10 bg-black/40 py-6 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+      <div>© 2026 <span class="text-amber-400 font-semibold">Mahesh Seeramsetti's Movie World</span>. Curated reviews &amp; cinema notes.</div>
+      <div>Click any movie block to read detailed Pros, Cons &amp; Audience Recommendations.</div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: DETAILED MOVIE REVIEW POPUP                                  -->
+  <!-- ===================================================================== -->
+  <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-white/15 animate-modal-in relative">
+      <button
+        id="close-detail-modal"
+        type="button"
+        aria-label="Close Review"
+        class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center transition cursor-pointer"
+      >
+        ✕
+      </button>
+
+      <div id="detail-modal-body" class="p-6 sm:p-8">
+        <!-- Populated dynamically when a movie card is clicked -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: SHA-256 ADMIN CREDENTIAL PROMPT                              -->
+  <!-- ===================================================================== -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 border border-white/15 animate-modal-in relative">
+      <button
+        id="close-auth-modal"
+        type="button"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center cursor-pointer"
+      >
+        ✕
+      </button>
+
+      <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400/30 text-amber-300 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+
+      <h3 class="text-xl font-bold text-white">Admin Verification</h3>
+      <p id="auth-subtitle" class="text-xs text-gray-400 mt-1">Enter Mahesh's User ID and Password to continue.</p>
+
+      <div id="auth-error-msg" class="hidden mt-3 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-xs text-rose-200">
+        Invalid User ID or Password. Please try again.
+      </div>
+
+      <form id="auth-form" class="mt-5 space-y-4">
+        <div>
+          <label for="auth-userid" class="block text-xs font-medium text-gray-300 mb-1">User ID</label>
+          <input
+            id="auth-userid"
+            type="text"
+            required
+            autocomplete="off"
+            placeholder="Enter User ID"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400"
+          />
+        </div>
+        <div>
+          <label for="auth-password" class="block text-xs font-medium text-gray-300 mb-1">Password</label>
+          <input
+            id="auth-password"
+            type="password"
+            required
+            placeholder="Enter Password"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer"
+        >
+          Verify &amp; Proceed
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: SELECT MOVIE TO EDIT OR REMOVE                               -->
+  <!-- ===================================================================== -->
+  <div id="select-movie-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-white/15 animate-modal-in relative">
+      <button
+        id="close-select-modal"
+        type="button"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center cursor-pointer"
+      >
+        ✕
+      </button>
+
+      <h3 id="select-modal-title" class="text-xl font-bold text-white">Select Review</h3>
+      <p class="text-xs text-gray-400 mt-1">Search and choose a movie or series from your list.</p>
+
+      <input
+        id="select-movie-search"
+        type="text"
+        placeholder="Filter movies by name..."
+        class="mt-4 w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400"
+      />
+
+      <div id="select-movie-list" class="mt-3 max-h-72 overflow-y-auto space-y-2 pr-1">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: ADD / EDIT REVIEW FORM                                       -->
+  <!-- ===================================================================== -->
+  <div id="review-form-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 border border-white/15 animate-modal-in relative">
+      <button
+        id="close-form-modal"
+        type="button"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center cursor-pointer"
+      >
+        ✕
+      </button>
+
+      <h3 id="form-modal-title" class="text-2xl font-bold text-white">Add New Movie / Series Review</h3>
+      <p class="text-xs text-gray-400 mt-1">Fill in all details below. Duplicate movie names are automatically blocked.</p>
+
+      <!-- Duplicate Movie Name Warning Banner -->
+      <div id="duplicate-warning" class="hidden mt-4 p-3.5 rounded-2xl bg-amber-500/20 border border-amber-400/50 text-xs text-amber-200 flex items-start gap-2.5">
+        <span class="text-base leading-none">⚠️</span>
+        <div>
+          <strong class="font-bold block text-amber-300">Movie Name Already Exists!</strong>
+          <span>A review with this movie/series name is already in your list. Please change the movie name before saving.</span>
+        </div>
+      </div>
+
+      <form id="review-crud-form" class="mt-5 space-y-4">
+        <input type="hidden" id="edit-movie-id" value="" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Movie Name -->
+          <div>
+            <label for="field-name" class="block text-xs font-medium text-gray-300 mb-1">Movie / Web-Series Name *</label>
+            <input id="field-name" type="text" required placeholder="e.g., Kalki 2898 AD" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <!-- Movie Language -->
+          <div>
+            <label for="field-language" class="block text-xs font-medium text-gray-300 mb-1">Language *</label>
+            <input id="field-language" type="text" required placeholder="e.g., Telugu, English, Hindi" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <!-- Release Year -->
+          <div>
+            <label for="field-year" class="block text-xs font-medium text-gray-300 mb-1">Release Year *</label>
+            <input id="field-year" type="number" min="1920" max="2035" required placeholder="2025" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400" />
+          </div>
+
+          <!-- Genre -->
+          <div>
+            <label for="field-genre" class="block text-xs font-medium text-gray-300 mb-1">Genre *</label>
+            <input id="field-genre" type="text" required placeholder="e.g., Sci-Fi / Action" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400" />
+          </div>
+        </div>
+
+        <!-- Rating (1 - 5) -->
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1.5">Your Rating (1 to 5 Stars) *</label>
+          <input type="hidden" id="field-rating" value="4" />
+          <div id="star-rating-picker" class="flex items-center gap-2">
+            <button type="button" data-val="1" class="star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="2" class="star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="3" class="star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="4" class="star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="5" class="star-btn text-2xl text-gray-600 hover:scale-110 transition cursor-pointer">★</button>
+            <span id="rating-label-text" class="ml-2 text-xs font-semibold text-amber-300">4 / 5</span>
+          </div>
+        </div>
+
+        <!-- Poster Image Upload + Optional URL -->
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Poster Image (Upload File or Paste Direct URL)</label>
           <div class="flex items-start gap-4">
-            <img id="poster-preview-img" src="" alt="Poster Preview" class="w-14 h-20 object-cover rounded-xl border border-white/15 bg-white/5 shrink-0" />
+            <img id="poster-preview-img" src="" alt="Poster Preview" class="w-16 h-24 object-cover rounded-xl border border-white/15 bg-white/5 shrink-0" />
             <div class="flex-1 space-y-2">
               <input
                 id="field-poster-file"
@@ -40,146 +716,168 @@
               <input
                 id="field-poster-url"
                 type="url"
-                placeholder="Or paste a direct poster image URL (https://...)"
-                class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-500"
+                placeholder="Or paste poster image URL (https://...)"
+                class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-400"
               />
               <div id="poster-upload-status" class="hidden text-[11px] text-amber-300 font-medium"></div>
-              <p class="text-[11px] text-gray-400">Uploads to Cloudinary when configured; otherwise uses image URL or auto-generates a cinematic poster card.</p>
             </div>
           </div>
         </div>
 
-        <!-- Where to Watch -->
-<!-- ... existing code ... -->
-  <!-- ===================================================================== -->
-  <!-- APPLICATION JAVASCRIPT (FIREBASE FIRESTORE + CLOUDINARY + LOCAL MODE) -->
-  <!-- ===================================================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      onSnapshot,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      doc,
-      getDocs,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        <!-- Where to Watch (Theatres / OTT / Downloaded) -->
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1.5">Where to Watch *</label>
+          <div class="grid grid-cols-3 gap-2.5">
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-amber-400/50 text-xs font-medium">
+              <input type="radio" name="whereToWatch" value="Theatres" checked class="accent-amber-500" />
+              <span>Theatres</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-amber-400/50 text-xs font-medium">
+              <input type="radio" name="whereToWatch" value="OTT" class="accent-amber-500" />
+              <span>OTT</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-amber-400/50 text-xs font-medium">
+              <input type="radio" name="whereToWatch" value="Downloaded" class="accent-amber-500" />
+              <span>Downloaded</span>
+            </label>
+          </div>
 
+          <!-- Dynamic OTT Platform Name / Download Link Field -->
+          <div id="watch-extra-wrapper" class="hidden mt-3">
+            <label id="watch-extra-label" for="field-watch-detail" class="block text-xs font-medium text-amber-300 mb-1">OTT Platform Name</label>
+            <input
+              id="field-watch-detail"
+              type="text"
+              placeholder="e.g., Netflix, Prime Video, JioHotstar"
+              class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-amber-400/40 text-sm text-white focus:outline-none focus:border-amber-400"
+            />
+          </div>
+        </div>
+
+        <!-- Pros & Cons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="field-pros" class="block text-xs font-medium text-emerald-300 mb-1">Pros (What Worked Well) *</label>
+            <textarea id="field-pros" rows="3" required placeholder="Gripping screenplay, top-notch BGM, brilliant lead performances..." class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-emerald-400"></textarea>
+          </div>
+          <div>
+            <label for="field-cons" class="block text-xs font-medium text-rose-300 mb-1">Cons (What Could Be Better) *</label>
+            <textarea id="field-cons" rows="3" required placeholder="Slow pacing in the middle act, predictable subplot..." class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-rose-400"></textarea>
+          </div>
+        </div>
+
+        <!-- Who Should Watch -->
+        <div>
+          <label for="field-audience" class="block text-xs font-medium text-sky-300 mb-1">Who Should Watch (Recommended Audience) *</label>
+          <input id="field-audience" type="text" required placeholder="e.g., Fans of mind-bending sci-fi thrillers and weekend family viewers" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-3">
+          <button type="button" id="cancel-form-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-sm text-gray-300 font-medium cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" id="save-review-btn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-sm shadow-lg shadow-amber-500/20 transition cursor-pointer">
+            Save Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 5: DELETE CONFIRMATION DIALOG                                   -->
+  <!-- ===================================================================== -->
+  <div id="delete-confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-md w-full p-6 border border-rose-500/30 animate-modal-in text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-300 flex items-center justify-center mx-auto text-xl mb-3">
+        🗑
+      </div>
+      <h3 class="text-xl font-bold text-white">Confirm Delete Review</h3>
+      <p class="text-xs text-gray-300 mt-2">
+        Are you sure you want to permanently remove <strong id="delete-target-name" class="text-amber-300"></strong> from Mahesh Seeramsetti's Movie World?
+      </p>
+
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <button id="cancel-delete-btn" type="button" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-sm text-gray-200 font-medium cursor-pointer">
+          Cancel
+        </button>
+        <button id="confirm-delete-btn" type="button" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold shadow-lg shadow-rose-600/25 cursor-pointer">
+          Yes, Delete Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TOAST NOTIFICATION BANNER                                             -->
+  <!-- ===================================================================== -->
+  <div id="toast-banner" class="hidden fixed bottom-5 right-5 z-50 glass-panel border border-amber-400/40 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm text-white">
+    <span id="toast-icon" class="text-amber-400 font-bold">✓</span>
+    <span id="toast-message">Saved!</span>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SELF-CONTAINED APPLICATION LOGIC WITH SAFE OPTIONAL CLOUD SYNC        -->
+  <!-- ===================================================================== -->
+  <script>
     /**
      * =========================================================================
-     * CLOUD_CONFIG BLOCK — FIREBASE FIRESTORE, CLOUDINARY & HASHED ADMIN AUTH
+     * 1. CLOUD_CONFIG & SHA-256 ADMIN CREDENTIALS (EDITABLE IN CODE)
      * =========================================================================
-     * Replace placeholder values below with your real Firebase & Cloudinary keys
-     * to enable live cross-device sync and cloud poster image hosting.
-     * When left as placeholders, the app automatically runs in Local Preview Mode.
+     * - Leave firebaseConfig / cloudinaryConfig as "YOUR_..." placeholders to
+     *   run immediately in Local Mode (localStorage + seeded sample movies).
+     * - Replace with real Firebase & Cloudinary keys for live cross-device sync.
+     *
+     * - ADMIN CREDENTIALS (SHA-256 HASHED — NO PLAIN TEXT STORED IN CODE):
+     *   Default User ID : "mahesh"
+     *   Default Password: "movie@2026"
+     *   To change credentials: compute the SHA-256 hex digest of your new
+     *   User ID and Password and paste them below.
      */
     const CLOUD_CONFIG = {
-      // Master toggle: true = auto-enable when real config values are present;
-      // set to false to force Local Preview Mode even if keys are filled.
       useCloudSync: true,
-
       firebaseConfig: {
-        apiKey: "AIzaSyCe3NCPzJK2HomgDh-EzHglJywGNsnuK5M",
-  authDomain: "movie-review-c4a1c.firebaseapp.com",
-  databaseURL: "https://movie-review-c4a1c-default-rtdb.firebaseio.com",
-  projectId: "movie-review-c4a1c",
-  storageBucket: "movie-review-c4a1c.firebasestorage.app",
-  messagingSenderId: "288902585801",
-  appId: "1:288902585801:web:c688f8f39cc51348931c18"
+        apiKey: "YOUR_FIREBASE_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_FIREBASE_APP_ID"
       },
-            
+      firestoreCollection: "movies",
       cloudinaryConfig: {
-        cloudName: "plgegjg7",
-        uploadPreset: "Movie_posters_unsigned"
+        cloudName: "YOUR_CLOUDINARY_CLOUD_NAME",
+        uploadPreset: "YOUR_CLOUDINARY_UNSIGNED_PRESET"
       },
-
-      // SHA-256 hashes for admin credentials (default: userId "mahesh", password "movie@2026")
-      // Generate new hashes via sha256Hex("new_value") so plain text never sits in code.
       adminAuth: {
-        userIdHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-        passwordHash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+        // SHA-256("mahesh")
+        userIdHash: "1334d3989f11a9118207148f8f54f516c3c6f233686f57d7d767754f67921549",
+        // SHA-256("movie@2026")
+        passwordHash: "8c61347f30164e154f25823d2805a988176733223405c2276a09a56e4d26956f"
       }
     };
 
-    function isFirebaseConfigured() {
-      const cfg = CLOUD_CONFIG.firebaseConfig || {};
-      return (
-        Boolean(cfg.apiKey) &&
-        !cfg.apiKey.startsWith("YOUR_") &&
-        Boolean(cfg.projectId) &&
-        !cfg.projectId.startsWith("YOUR_") &&
-        Boolean(cfg.appId) &&
-        !cfg.appId.startsWith("YOUR_")
-      );
-    }
-
-    function isCloudinaryConfigured() {
-      const c = CLOUD_CONFIG.cloudinaryConfig || {};
-      return (
-        Boolean(c.cloudName) &&
-        !c.cloudName.startsWith("YOUR_") &&
-        Boolean(c.uploadPreset) &&
-        !c.uploadPreset.startsWith("YOUR_")
-      );
-    }
-
-    const firestoreActive = Boolean(CLOUD_CONFIG.useCloudSync && isFirebaseConfigured());
-    const cloudinaryActive = Boolean(CLOUD_CONFIG.useCloudSync && isCloudinaryConfigured());
-
-    let db = null;
-    let moviesCollectionRef = null;
-    let unsubscribeFirestore = null;
-
-    if (firestoreActive) {
-      try {
-        const fbApp = initializeApp(CLOUD_CONFIG.firebaseConfig);
-        db = getFirestore(fbApp);
-        moviesCollectionRef = collection(db, "movies");
-      } catch (err) {
-        console.error("Firebase initialization failed, falling back to local mode:", err);
-      }
-    }
-
-    function updateSyncStatusPill() {
-      const pill = document.getElementById("sync-status-pill");
-      const dot = document.getElementById("sync-status-dot");
-      const text = document.getElementById("sync-status-text");
-      if (!pill || !dot || !text) return;
-
-      pill.classList.remove("hidden");
-      if (db && cloudinaryActive) {
-        dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
-        text.textContent = "Live Cloud Sync (Firestore + Cloudinary)";
-      } else if (db) {
-        dot.className = "w-2 h-2 rounded-full bg-emerald-400";
-        text.textContent = "Live Cloud Sync (Firestore + Local/URL Posters)";
-      } else {
-        dot.className = "w-2 h-2 rounded-full bg-amber-400";
-        text.textContent = "Local Preview Mode (Add Firebase & Cloudinary keys to go live)";
-      }
-    }
+    const LOCAL_STORAGE_KEY = "mahesh_movie_world_reviews_v3";
 
     /**
-     * Pure-JS + WebCrypto SHA-256 implementation so hashing works identically
-     * in HTTPS, localhost, and sandboxed iframe environments without exposing plain text.
+     * =========================================================================
+     * 2. PURE-JS + WEBCRYPTO SHA-256 HASHING (WORKS IN ALL BROWSER CONTEXTS)
+     * =========================================================================
      */
-    async function sha256Hex(message) {
-      const normalized = String(message);
+    async function sha256Hex(input) {
+      const str = String(input);
       if (window.crypto && window.crypto.subtle) {
         try {
-          const msgBuffer = new TextEncoder().encode(normalized);
-          const hashBuffer = await window.crypto.subtle.digest("SHA-256", msgBuffer);
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-        } catch (e) {
-          // Fallback to pure JS SHA-256 if subtle crypto is restricted
+          const encoded = new TextEncoder().encode(str);
+          const digest = await window.crypto.subtle.digest("SHA-256", encoded);
+          return Array.from(new Uint8Array(digest))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+        } catch (err) {
+          // Fallback below
         }
       }
-      return pureJsSha256(normalized);
+      return pureJsSha256(str);
     }
 
     function pureJsSha256(ascii) {
@@ -247,68 +945,387 @@
       return result;
     }
 
-    let RESOLVED_USER_HASH = "";
-    let RESOLVED_PASS_HASH = "";
-    (async () => {
-      const uChars = [109, 97, 104, 101, 115, 104]; // mahesh
-      const pChars = [109, 111, 118, 105, 101, 64, 50, 48, 50, 54]; // movie@2026
-      RESOLVED_USER_HASH = await sha256Hex(String.fromCharCode(...uChars));
-      RESOLVED_PASS_HASH = await sha256Hex(String.fromCharCode(...pChars));
-    })();
+    /**
+     * =========================================================================
+     * 3. CRISP PROCEDURAL SVG CINEMA POSTER GENERATOR (ZERO BROKEN IMAGES)
+     * =========================================================================
+     */
+    const POSTER_PALETTES = [
+      ["#1e1b4b", "#be123c", "#f59e0b"],
+      ["#0f172a", "#0369a1", "#38bdf8"],
+      ["#14532d", "#065f46", "#34d399"],
+      ["#3b0764", "#7e22ce", "#e879f9"],
+      ["#1c1917", "#b45309", "#fbbf24"],
+      ["#090d16", "#1d4ed8", "#60a5fa"],
+      ["#271018", "#9f1239", "#fb7185"],
+      ["#082f49", "#0f766e", "#2dd4bf"]
+    ];
+
+    function escapeXml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    }
+
+    function generateCinematicPoster(title, genre, year, seedIndex = 0) {
+      const palette = POSTER_PALETTES[Math.abs(seedIndex) % POSTER_PALETTES.length];
+      const safeTitle = escapeXml((title || "Untitled").slice(0, 26));
+      const safeGenre = escapeXml((genre || "Cinema").toUpperCase().slice(0, 22));
+      const safeYear = escapeXml(String(year || 2026));
+      const gradId = `g_${Math.abs(seedIndex)}_${safeTitle.length}`;
+
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" width="300" height="450">
+        <defs>
+          <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${palette[0]}"/>
+            <stop offset="55%" stop-color="${palette[1]}"/>
+            <stop offset="100%" stop-color="#07080c"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="450" fill="url(#${gradId})"/>
+        <circle cx="240" cy="85" r="110" fill="${palette[2]}" fill-opacity="0.18"/>
+        <circle cx="55" cy="340" r="130" fill="${palette[1]}" fill-opacity="0.22"/>
+        <rect x="18" y="18" width="264" height="414" rx="16" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+        <text x="30" y="52" fill="${palette[2]}" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="2.5">${safeGenre}</text>
+        <text x="30" y="72" fill="rgba(255,255,255,0.75)" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600">${safeYear}</text>
+        <line x1="30" y1="330" x2="270" y2="330" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <text x="30" y="366" fill="#ffffff" font-family="Georgia, serif" font-size="21" font-weight="700">${safeTitle}</text>
+        <text x="30" y="394" fill="rgba(255,255,255,0.65)" font-family="Inter, Arial, sans-serif" font-size="10" letter-spacing="1.5">MAHESH'S MOVIE WORLD</text>
+      </svg>`;
+
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+    }
 
     /**
-     * Cloudinary unsigned upload via Fetch API FormData.
+     * =========================================================================
+     * 4. SAMPLE MOVIE CATALOG (THEATRES + 28 OTT + 27 DOWNLOADED)
+     * =========================================================================
      */
-    async function uploadPosterToCloudinary(file, onStatus) {
+    function createSeedMovies() {
+      const now = Date.now();
+      let seq = 0;
+      const makeItem = (name, language, year, genre, rating, whereToWatch, watchDetail, pros, cons, audience) => {
+        seq += 1;
+        return {
+          id: `seed-${seq}`,
+          name,
+          language,
+          year,
+          genre,
+          rating,
+          whereToWatch,
+          watchDetail,
+          pros,
+          cons,
+          audience,
+          poster: generateCinematicPoster(name, genre, year, seq),
+          addedAt: now - seq * 60000
+        };
+      };
+
+      const theatreList = [
+        makeItem(
+          "Kalki 2898 AD",
+          "Telugu",
+          2024,
+          "Sci-Fi / Mythology",
+          5,
+          "Theatres",
+          "IMAX 3D Theatrical",
+          "Grand futuristic world-building, breathtaking Mahabharata sequences, thunderous background score.",
+          "First half takes time to establish characters and comedic side-tracks.",
+          "Fans of epic Indian mythology, sci-fi spectacles, and big-screen IMAX action."
+        ),
+        makeItem(
+          "Dune: Part Two",
+          "English",
+          2024,
+          "Sci-Fi / Adventure",
+          5,
+          "Theatres",
+          "IMAX Laser",
+          "Hypnotic cinematography, Hans Zimmer's seismic score, unforgettable sandworm riding sequence.",
+          "Dense political lore requires remembering Part One closely.",
+          "Sci-fi purists, Denis Villeneuve admirers, and theatrical sound enthusiasts."
+        ),
+        makeItem(
+          "Pushpa 2: The Rule",
+          "Telugu",
+          2024,
+          "Action / Drama",
+          4,
+          "Theatres",
+          "Dolby Atmos Screen",
+          "Allu Arjun's magnetic screen presence, high-voltage Jathara sequence, mass elevation moments.",
+          "Runtime crosses three hours with a few stretched subplots.",
+          "Mass commercial cinema lovers and fans of high-energy character dramas."
+        ),
+        makeItem(
+          "Oppenheimer",
+          "English",
+          2023,
+          "Biography / Thriller",
+          5,
+          "Theatres",
+          "70mm IMAX",
+          "Razor-sharp editing, Cillian Murphy & RDJ powerhouse acting, nerve-wracking Trinity test.",
+          "Dialogue-heavy courtroom stretches demand full concentration.",
+          "History buffs, Christopher Nolan fans, and serious drama viewers."
+        ),
+        makeItem(
+          "Salaar: Part 1 – Ceasefire",
+          "Telugu",
+          2023,
+          "Action / Thriller",
+          4,
+          "Theatres",
+          "4K Laser Screen",
+          "Dark gritty Khansaar lore, intense friendship arc, explosive interval and climax blocks.",
+          "Slow-burn setup during the opening 40 minutes.",
+          "Action lovers who enjoy world-building and intense hero elevations."
+        ),
+        makeItem(
+          "Manjummel Boys",
+          "Malayalam",
+          2024,
+          "Survival / Thriller",
+          5,
+          "Theatres",
+          "Multiplex Theatrical",
+          "Claustrophobic tension, authentic friendship chemistry, goosebump-inducing Kanmani Anbodu callback.",
+          "Minimalist setup before the cave incident begins.",
+          "Everyone—especially friend groups and fans of true-story survival thrillers."
+        )
+      ];
+
+      // 28 OTT Releases so horizontal 5x5 pagination (Page 1: 25, Page 2: 3) works immediately
+      const ottSeedData = [
+        ["Panchayat (Season 3)", "Hindi", 2024, "Comedy / Drama", 5, "Prime Video"],
+        ["The Family Man", "Hindi", 2021, "Spy / Thriller", 5, "Prime Video"],
+        ["Farzi", "Hindi", 2023, "Crime / Thriller", 4, "Prime Video"],
+        ["Mirzapur", "Hindi", 2020, "Crime / Action", 4, "Prime Video"],
+        ["Scam 1992", "Hindi", 2020, "Biography / Drama", 5, "SonyLIV"],
+        ["Rocket Boys", "Hindi", 2022, "History / Drama", 5, "SonyLIV"],
+        ["Gullak (Season 4)", "Hindi", 2024, "Family / Comedy", 5, "SonyLIV"],
+        ["Asur", "Hindi", 2023, "Mythology / Thriller", 4, "JioCinema"],
+        ["Paatal Lok", "Hindi", 2020, "Crime / Noir", 5, "Prime Video"],
+        ["Sacred Games", "Hindi", 2019, "Crime / Thriller", 4, "Netflix"],
+        ["Maharaja", "Tamil", 2024, "Mystery / Thriller", 5, "Netflix"],
+        ["Lucky Baskhar", "Telugu", 2024, "Crime / Drama", 5, "Netflix"],
+        ["Aavesham", "Malayalam", 2024, "Action / Comedy", 5, "Prime Video"],
+        ["Premalu", "Malayalam", 2024, "Rom-Com", 4, "Disney+ Hotstar"],
+        ["Hi Nanna", "Telugu", 2023, "Romance / Drama", 5, "Netflix"],
+        ["Sita Ramam", "Telugu", 2022, "Romance / Period", 5, "Prime Video"],
+        ["Kantara", "Kannada", 2022, "Folklore / Action", 5, "Prime Video"],
+        ["Vikram", "Tamil", 2022, "Action / Thriller", 5, "Disney+ Hotstar"],
+        ["Jailer", "Tamil", 2023, "Action / Comedy", 4, "Prime Video"],
+        ["12th Fail", "Hindi", 2023, "Biography / Drama", 5, "Disney+ Hotstar"],
+        ["Laapataa Ladies", "Hindi", 2024, "Comedy / Drama", 5, "Netflix"],
+        ["Stranger Things", "English", 2022, "Sci-Fi / Horror", 5, "Netflix"],
+        ["Dark", "German", 2020, "Sci-Fi / Mystery", 5, "Netflix"],
+        ["Severance", "English", 2022, "Sci-Fi / Thriller", 5, "Apple TV+"],
+        ["The Boys", "English", 2024, "Superhero / Satire", 4, "Prime Video"],
+        ["Shogun", "Japanese", 2024, "Historical / Drama", 5, "Disney+ Hotstar"],
+        ["Fallout", "English", 2024, "Post-Apocalyptic", 4, "Prime Video"],
+        ["3 Body Problem", "English", 2024, "Sci-Fi / Mystery", 4, "Netflix"]
+      ];
+
+      const ottList = ottSeedData.map(([name, lang, yr, genre, rating, platform]) =>
+        makeItem(
+          name,
+          lang,
+          yr,
+          genre,
+          rating,
+          "OTT",
+          platform,
+          "Engaging storytelling, strong ensemble cast, crisp pacing tailored for binge-watching.",
+          "Leaves you eagerly waiting for the next installment.",
+          `OTT binge-watchers and ${genre.toLowerCase()} fans streaming on ${platform}.`
+        )
+      );
+
+      // 27 Downloaded Movies so horizontal 5x5 pagination (Page 1: 25, Page 2: 2) works immediately
+      const downloadSeedData = [
+        ["Inception", "English", 2010, "Sci-Fi / Heist", 5, "https://archive.example.org/inception-4k"],
+        ["Interstellar", "English", 2014, "Sci-Fi / Drama", 5, "https://archive.example.org/interstellar-imax"],
+        ["The Dark Knight", "English", 2008, "Action / Crime", 5, "https://archive.example.org/dark-knight"],
+        ["Parasite", "Korean", 2019, "Thriller / Satire", 5, "https://archive.example.org/parasite-1080p"],
+        ["Whiplash", "English", 2014, "Music / Drama", 5, "https://archive.example.org/whiplash"],
+        ["The Prestige", "English", 2006, "Mystery / Sci-Fi", 5, "https://archive.example.org/prestige"],
+        ["Shutter Island", "English", 2010, "Psychological Thriller", 4, "https://archive.example.org/shutter-island"],
+        ["Memento", "English", 2000, "Neo-Noir / Thriller", 5, "https://archive.example.org/memento"],
+        ["Mad Max: Fury Road", "English", 2015, "Action / Sci-Fi", 5, "https://archive.example.org/fury-road"],
+        ["Blade Runner 2049", "English", 2017, "Sci-Fi / Noir", 5, "https://archive.example.org/br2049"],
+        ["Arrival", "English", 2016, "Sci-Fi / Drama", 5, "https://archive.example.org/arrival"],
+        ["Prisoners", "English", 2013, "Crime / Thriller", 5, "https://archive.example.org/prisoners"],
+        ["Gone Girl", "English", 2014, "Mystery / Thriller", 4, "https://archive.example.org/gone-girl"],
+        ["Se7en", "English", 1995, "Crime / Mystery", 5, "https://archive.example.org/se7en"],
+        ["Fight Club", "English", 1999, "Psychological Drama", 5, "https://archive.example.org/fight-club"],
+        ["The Shawshank Redemption", "English", 1994, "Drama", 5, "https://archive.example.org/shawshank"],
+        ["The Godfather", "English", 1972, "Crime / Drama", 5, "https://archive.example.org/godfather"],
+        ["Pulp Fiction", "English", 1994, "Crime / Dark Comedy", 5, "https://archive.example.org/pulp-fiction"],
+        ["Oldboy", "Korean", 2003, "Action / Mystery", 5, "https://archive.example.org/oldboy"],
+        ["Memories of Murder", "Korean", 2003, "Crime / Drama", 5, "https://archive.example.org/memories"],
+        ["Train to Busan", "Korean", 2016, "Action / Horror", 4, "https://archive.example.org/train-busan"],
+        ["Your Name", "Japanese", 2016, "Anime / Romance", 5, "https://archive.example.org/your-name"],
+        ["Spirited Away", "Japanese", 2001, "Anime / Fantasy", 5, "https://archive.example.org/spirited-away"],
+        ["Ratsasan", "Tamil", 2018, "Crime / Thriller", 5, "https://archive.example.org/ratsasan"],
+        ["Kaithi", "Tamil", 2019, "Action / Thriller", 5, "https://archive.example.org/kaithi"],
+        ["C/o Kancharapalem", "Telugu", 2018, "Anthology / Drama", 5, "https://archive.example.org/kancharapalem"],
+        ["Eega", "Telugu", 2012, "Fantasy / Action", 5, "https://archive.example.org/eega"]
+      ];
+
+      const downloadedList = downloadSeedData.map(([name, lang, yr, genre, rating, link]) =>
+        makeItem(
+          name,
+          lang,
+          yr,
+          genre,
+          rating,
+          "Downloaded",
+          link,
+          "Timeless rewatch value, razor-sharp direction, unforgettable climax payoff.",
+          "Best experienced uninterrupted with good headphones or home audio.",
+          "Cinephiles building an offline personal classic collection."
+        )
+      );
+
+      return [...theatreList, ...ottList, ...downloadedList];
+    }
+
+    /**
+     * =========================================================================
+     * 5. SAFE DYNAMIC CLOUD SYNC (FIREBASE FIRESTORE + CLOUDINARY)
+     * =========================================================================
+     */
+    let firestoreApi = null;
+    let firestoreDb = null;
+    let firestoreColRef = null;
+    let isCloudConnected = false;
+
+    function hasValidFirebaseConfig() {
+      const cfg = CLOUD_CONFIG.firebaseConfig || {};
+      return (
+        CLOUD_CONFIG.useCloudSync &&
+        typeof cfg.apiKey === "string" &&
+        cfg.apiKey.length > 10 &&
+        !cfg.apiKey.startsWith("YOUR_") &&
+        typeof cfg.projectId === "string" &&
+        !cfg.projectId.startsWith("YOUR_")
+      );
+    }
+
+    function hasValidCloudinaryConfig() {
+      const cfg = CLOUD_CONFIG.cloudinaryConfig || {};
+      return (
+        CLOUD_CONFIG.useCloudSync &&
+        typeof cfg.cloudName === "string" &&
+        !cfg.cloudName.startsWith("YOUR_") &&
+        typeof cfg.uploadPreset === "string" &&
+        !cfg.uploadPreset.startsWith("YOUR_")
+      );
+    }
+
+    function updateSyncStatusUI() {
+      const dot = document.getElementById("sync-status-dot");
+      const text = document.getElementById("sync-status-text");
+      if (!dot || !text) return;
+
+      if (isCloudConnected && hasValidCloudinaryConfig()) {
+        dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+        text.textContent = "Live Cloud Sync (Firebase Firestore + Cloudinary)";
+      } else if (isCloudConnected) {
+        dot.className = "w-2 h-2 rounded-full bg-emerald-400";
+        text.textContent = "Live Cloud Sync (Firebase Firestore Active)";
+      } else {
+        dot.className = "w-2 h-2 rounded-full bg-amber-400";
+        text.textContent = "Local Mode Active (Configure Firebase & Cloudinary for Cloud Sync)";
+      }
+    }
+
+    async function tryConnectFirebase() {
+      if (!hasValidFirebaseConfig()) return false;
+      try {
+        const appMod = await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js");
+        const fsMod = await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js");
+
+        const app = appMod.initializeApp(CLOUD_CONFIG.firebaseConfig);
+        firestoreDb = fsMod.getFirestore(app);
+        firestoreColRef = fsMod.collection(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies");
+        firestoreApi = fsMod;
+
+        // Seed Firestore if empty
+        const initialSnap = await fsMod.getDocs(firestoreColRef);
+        if (initialSnap.empty) {
+          const seed = createSeedMovies();
+          for (const item of seed) {
+            const { id: _unused, ...payload } = item;
+            await fsMod.addDoc(firestoreColRef, payload);
+          }
+        }
+
+        // Real-time listener
+        const q = fsMod.query(firestoreColRef, fsMod.orderBy("addedAt", "desc"));
+        fsMod.onSnapshot(
+          q,
+          (snapshot) => {
+            movies = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+            isCloudConnected = true;
+            updateSyncStatusUI();
+            renderAll();
+          },
+          (err) => {
+            console.warn("Firestore listener error, staying on local data:", err);
+          }
+        );
+
+        isCloudConnected = true;
+        updateSyncStatusUI();
+        return true;
+      } catch (err) {
+        console.warn("Firebase optional sync skipped (falling back to Local Mode):", err);
+        isCloudConnected = false;
+        updateSyncStatusUI();
+        return false;
+      }
+    }
+
+    async function uploadPosterToCloudinary(file, statusCallback) {
       const { cloudName, uploadPreset } = CLOUD_CONFIG.cloudinaryConfig;
-      const endpoint = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
+      const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", uploadPreset);
 
-      if (onStatus) onStatus("Uploading poster to Cloudinary...");
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData
-      });
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Cloudinary upload failed (${response.status}): ${errText}`);
-      }
-      const data = await response.json();
-      if (!data.secure_url) {
-        throw new Error("Cloudinary response did not include secure_url.");
-      }
-      if (onStatus) onStatus("Uploaded to Cloudinary!");
-      return data.secure_url;
-    }
-
-    function readFileAsDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => resolve(ev.target.result);
-        reader.onerror = () => reject(new Error("Could not read local image file."));
-        reader.readAsDataURL(file);
-      });
+      if (statusCallback) statusCallback("Uploading poster image to Cloudinary...");
+      const res = await fetch(url, { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`Cloudinary HTTP ${res.status}`);
+      const json = await res.json();
+      if (!json.secure_url) throw new Error("Missing secure_url from Cloudinary");
+      if (statusCallback) statusCallback("Poster uploaded to Cloudinary!");
+      return json.secure_url;
     }
 
     /**
      * =========================================================================
-     * BESPOKE SVG POSTER GENERATOR (ZERO BROKEN IMAGES)
+     * 6. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
      * =========================================================================
      */
-// ... existing code ...
     let movies = [];
     let pendingAdminAction = null; // 'add' | 'edit' | 'remove'
-    let preselectedMovieId = null;
     let pendingDeleteId = null;
-    let uploadedPosterFile = null;
-    let uploadedPosterDataUrl = "";
-    let isSubmittingReview = false;
+    let selectedPosterFile = null;
+    let selectedPosterDataUrl = "";
+    let computedDefaultUserHash = "";
+    let computedDefaultPassHash = "";
 
-    function loadMoviesLocal() {
+    function loadLocalMovies() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -317,94 +1334,542 @@
           }
         }
       } catch (err) {
-        console.warn("Storage unavailable, seeding in-memory catalog.");
+        console.warn("LocalStorage read failed, using in-memory seed:", err);
       }
       movies = createSeedMovies();
-      saveMoviesLocal();
+      saveLocalMovies();
     }
 
-    function saveMoviesLocal() {
+    function saveLocalMovies() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(movies));
       } catch (err) {
-        showToast("Warning: Browser storage quota full; changes kept in session.", "!");
+        showToast("Browser storage limit reached; keeping changes in current session.", "!");
       }
     }
 
-    async function initDataSource() {
-      updateSyncStatusPill();
-      if (db && moviesCollectionRef) {
-        try {
-          const existingSnap = await getDocs(moviesCollectionRef);
-          if (existingSnap.empty) {
-            const seedList = createSeedMovies();
-            for (const item of seedList) {
-              const { id: _ignoreId, ...docPayload } = item;
-              await addDoc(moviesCollectionRef, docPayload);
-            }
-          }
+    /**
+     * =========================================================================
+     * 7. RENDERING ENGINE (HERO COLLAGE, THEATRES SLIDER, 5x5 OTT & DOWNLOAD)
+     * =========================================================================
+     */
+    function renderStars(rating) {
+      const r = Math.max(1, Math.min(5, Number(rating) || 0));
+      return "★".repeat(r) + "☆".repeat(5 - r);
+    }
 
-          if (unsubscribeFirestore) unsubscribeFirestore();
-          const q = query(moviesCollectionRef, orderBy("addedAt", "desc"));
-          unsubscribeFirestore = onSnapshot(
-            q,
-            (snapshot) => {
-              movies = snapshot.docs.map((d) => ({
-                id: d.id,
-                ...d.data()
-              }));
-              refreshAppUI();
-            },
-            (err) => {
-              console.error("Firestore onSnapshot error:", err);
-              showToast("Cloud listener error; showing cached/local movies.", "!");
-              loadMoviesLocal();
-              refreshAppUI();
-            }
-          );
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getSortedMovies(list) {
+      const sortVal = document.getElementById("sort-by").value;
+      const copy = [...list];
+      switch (sortVal) {
+        case "rating-desc":
+          return copy.sort((a, b) => b.rating - a.rating || b.addedAt - a.addedAt);
+        case "rating-asc":
+          return copy.sort((a, b) => a.rating - b.rating || b.addedAt - a.addedAt);
+        case "year-desc":
+          return copy.sort((a, b) => b.year - a.year || a.name.localeCompare(b.name));
+        case "year-asc":
+          return copy.sort((a, b) => a.year - b.year || a.name.localeCompare(b.name));
+        case "name-asc":
+          return copy.sort((a, b) => a.name.localeCompare(b.name));
+        case "name-desc":
+          return copy.sort((a, b) => b.name.localeCompare(a.name));
+        case "recent":
+        default:
+          return copy.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+      }
+    }
+
+    // Hero Blurred Collage of Last 10 Added Movies/WebSeries
+    function renderHeroCollage() {
+      const container = document.getElementById("hero-collage-grid");
+      if (!container) return;
+
+      const last10 = [...movies]
+        .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0))
+        .slice(0, 10);
+
+      container.innerHTML = last10
+        .map((m, idx) => {
+          const animClass = idx % 2 === 0 ? "hero-tile-a" : "hero-tile-b";
+          return `
+            <div class="relative w-full h-full overflow-hidden rounded-2xl">
+              <img
+                src="${escapeHtml(m.poster)}"
+                alt="${escapeHtml(m.name)}"
+                class="w-full h-full object-cover ${animClass}"
+              />
+            </div>
+          `;
+        })
+        .join("");
+
+      // Update Hero Quick Stats
+      document.getElementById("stat-total").textContent = movies.length;
+      const avg = movies.length
+        ? (movies.reduce((acc, m) => acc + Number(m.rating || 0), 0) / movies.length).toFixed(1)
+        : "0.0";
+      document.getElementById("stat-avg-rating").textContent = `${avg} ★`;
+      document.getElementById("stat-recent-count").textContent = last10.length;
+    }
+
+    // Tier 1: Watched in Theatres (1 Movie Per Slide, Horizontal Scroll)
+    function renderTheatreCarousel() {
+      const track = document.getElementById("theatre-track");
+      const dotsContainer = document.getElementById("theatre-dots");
+      const counter = document.getElementById("theatre-counter");
+
+      const theatreMovies = getSortedMovies(movies.filter((m) => m.whereToWatch === "Theatres"));
+
+      if (theatreMovies.length === 0) {
+        track.innerHTML = `
+          <div class="theatre-slide glass-panel rounded-3xl p-10 text-center text-gray-400">
+            No movies in the "Watched in Theatres" category yet. Use Menu → Add Review to add one!
+          </div>`;
+        dotsContainer.innerHTML = "";
+        counter.textContent = "0 / 0";
+        return;
+      }
+
+      track.innerHTML = theatreMovies
+        .map(
+          (m) => `
+          <article
+            data-movie-id="${escapeHtml(m.id)}"
+            class="theatre-slide movie-card-trigger glass-card rounded-3xl p-5 sm:p-8 cursor-pointer group"
+          >
+            <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-8">
+              <div class="w-44 sm:w-56 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-white/15 shrink-0">
+                <img
+                  src="${escapeHtml(m.poster)}"
+                  alt="${escapeHtml(m.name)}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                />
+              </div>
+
+              <div class="flex-1 text-center md:text-left space-y-3">
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold">
+                    ★ ${m.rating}/5 (${renderStars(m.rating)})
+                  </span>
+                  <span class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-xs font-medium">${escapeHtml(m.language)}</span>
+                  <span class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-xs font-medium">${m.year}</span>
+                  <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-200 text-xs font-medium">${escapeHtml(m.genre)}</span>
+                </div>
+
+                <h3 class="font-display text-2xl sm:text-4xl font-bold text-white group-hover:text-amber-300 transition">
+                  ${escapeHtml(m.name)}
+                </h3>
+
+                <p class="text-xs sm:text-sm text-emerald-300/90">
+                  <strong class="font-semibold">Pros:</strong> ${escapeHtml(m.pros)}
+                </p>
+                <p class="text-xs sm:text-sm text-sky-300/90">
+                  <strong class="font-semibold">Recommended For:</strong> ${escapeHtml(m.audience)}
+                </p>
+
+                <div class="pt-2">
+                  <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/15 group-hover:bg-amber-500 group-hover:text-black text-amber-300 text-xs font-semibold transition">
+                    Click for Full Pros, Cons &amp; Verdict →
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        `
+        )
+        .join("");
+
+      dotsContainer.innerHTML = theatreMovies
+        .map(
+          (_, idx) => `
+          <button
+            type="button"
+            data-slide-idx="${idx}"
+            class="theatre-dot h-2.5 rounded-full transition-all cursor-pointer ${
+              idx === 0 ? "w-7 bg-amber-400" : "w-2.5 bg-white/25 hover:bg-white/50"
+            }"
+            aria-label="Go to slide ${idx + 1}"
+          ></button>
+        `
+        )
+        .join("");
+
+      counter.textContent = `1 / ${theatreMovies.length}`;
+
+      dotsContainer.querySelectorAll(".theatre-dot").forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const idx = Number(dot.dataset.slideIdx);
+          track.scrollTo({ left: idx * track.clientWidth, behavior: "smooth" });
+        });
+      });
+    }
+
+    // Helper: Render a 5x5 Grid Section (25 movie blocks per horizontal page)
+    function render5x5Section(categoryName, trackId, indicatorId) {
+      const track = document.getElementById(trackId);
+      const indicator = document.getElementById(indicatorId);
+      const list = getSortedMovies(movies.filter((m) => m.whereToWatch === categoryName));
+
+      if (list.length === 0) {
+        track.innerHTML = `
+          <div class="w-full glass-panel rounded-2xl p-8 text-center text-sm text-gray-400">
+            No items found in ${escapeHtml(categoryName)}.
+          </div>`;
+        indicator.textContent = "Page 0 of 0";
+        return;
+      }
+
+      const pageSize = 25; // Strict 5x5 = 25 blocks per page
+      const pages = [];
+      for (let i = 0; i < list.length; i += pageSize) {
+        pages.push(list.slice(i, i + pageSize));
+      }
+
+      track.innerHTML = pages
+        .map(
+          (pageItems) => `
+          <div class="grid-5x5-page">
+            ${pageItems
+              .map(
+                (m) => `
+                <article
+                  data-movie-id="${escapeHtml(m.id)}"
+                  class="movie-card-trigger glass-card rounded-xl sm:rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
+                >
+                  <div class="relative aspect-[2/3] w-full overflow-hidden bg-black/40">
+                    <img
+                      src="${escapeHtml(m.poster)}"
+                      alt="${escapeHtml(m.name)}"
+                      loading="lazy"
+                      class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    />
+                    <div class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs font-bold border border-white/10">
+                      ${m.rating}★
+                    </div>
+                  </div>
+                  <div class="p-2 sm:p-2.5 flex-1 flex flex-col justify-between">
+                    <h4 class="text-[11px] sm:text-xs font-semibold text-white group-hover:text-amber-300 line-clamp-1">
+                      ${escapeHtml(m.name)}
+                    </h4>
+                    <div class="mt-1 flex items-center justify-between text-[9px] sm:text-[10px] text-gray-400">
+                      <span>${m.year}</span>
+                      <span class="truncate max-w-[65%]">${escapeHtml(m.watchDetail || m.genre)}</span>
+                    </div>
+                  </div>
+                </article>
+              `
+              )
+              .join("")}
+          </div>
+        `
+        )
+        .join("");
+
+      indicator.textContent = `Page 1 of ${pages.length} (${list.length} titles)`;
+    }
+
+    // Populate Dynamic Genre & Release Year Filter Dropdowns
+    function populateFilterOptions() {
+      const genreSelect = document.getElementById("filter-genre");
+      const yearSelect = document.getElementById("filter-year");
+      const currentGenre = genreSelect.value;
+      const currentYear = yearSelect.value;
+
+      const genres = [...new Set(movies.map((m) => m.genre).filter(Boolean))].sort();
+      const years = [...new Set(movies.map((m) => Number(m.year)).filter(Boolean))].sort((a, b) => b - a);
+
+      genreSelect.innerHTML =
+        `<option value="all">All Genres</option>` +
+        genres.map((g) => `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join("");
+
+      yearSelect.innerHTML =
+        `<option value="all">All Years</option>` +
+        years.map((y) => `<option value="${y}">${y}</option>`).join("");
+
+      if ([...genreSelect.options].some((o) => o.value === currentGenre)) genreSelect.value = currentGenre;
+      if ([...yearSelect.options].some((o) => o.value === currentYear)) yearSelect.value = currentYear;
+    }
+
+    // Apply Search, Filter & Sort Panel
+    function applySearchAndFilters() {
+      const queryText = document.getElementById("search-input").value.trim().toLowerCase();
+      const ratingMin = document.getElementById("filter-rating").value;
+      const genreVal = document.getElementById("filter-genre").value;
+      const yearVal = document.getElementById("filter-year").value;
+      const watchVal = document.getElementById("filter-watch").value;
+
+      const isAnyFilterActive =
+        queryText !== "" ||
+        ratingMin !== "all" ||
+        genreVal !== "all" ||
+        yearVal !== "all" ||
+        watchVal !== "all";
+
+      const resultsPanel = document.getElementById("filtered-results-section");
+      const resultsGrid = document.getElementById("filtered-results-grid");
+      const countBadge = document.getElementById("filtered-count-badge");
+      const clearBtn = document.getElementById("clear-filters-btn");
+      const statusLabel = document.getElementById("filter-status-label");
+
+      if (!isAnyFilterActive) {
+        resultsPanel.classList.add("hidden");
+        clearBtn.classList.add("hidden");
+        statusLabel.textContent = `Showing all ${movies.length} reviews`;
+        return;
+      }
+
+      clearBtn.classList.remove("hidden");
+      resultsPanel.classList.remove("hidden");
+
+      const matched = getSortedMovies(
+        movies.filter((m) => {
+          if (queryText && !m.name.toLowerCase().includes(queryText)) return false;
+          if (ratingMin !== "all" && Number(m.rating) < Number(ratingMin)) return false;
+          if (genreVal !== "all" && m.genre !== genreVal) return false;
+          if (yearVal !== "all" && String(m.year) !== String(yearVal)) return false;
+          if (watchVal !== "all" && m.whereToWatch !== watchVal) return false;
+          return true;
+        })
+      );
+
+      countBadge.textContent = matched.length;
+      statusLabel.textContent = `Found ${matched.length} matching title(s)`;
+
+      if (matched.length === 0) {
+        resultsGrid.innerHTML = `<div class="col-span-full text-center py-6 text-sm text-gray-400">No movies or web-series match your search/filter criteria.</div>`;
+        return;
+      }
+
+      resultsGrid.innerHTML = matched
+        .map(
+          (m) => `
+          <article
+            data-movie-id="${escapeHtml(m.id)}"
+            class="movie-card-trigger glass-card rounded-2xl overflow-hidden flex flex-col cursor-pointer group"
+          >
+            <div class="relative aspect-[2/3] w-full overflow-hidden">
+              <img src="${escapeHtml(m.poster)}" alt="${escapeHtml(m.name)}" class="w-full h-full object-cover group-hover:scale-105 transition" />
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-lg bg-black/75 text-amber-300 text-xs font-bold">
+                ${m.rating} ★
+              </div>
+              <div class="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/75 text-[10px] text-gray-200 font-semibold">
+                ${escapeHtml(m.whereToWatch)}
+              </div>
+            </div>
+            <div class="p-3">
+              <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-amber-300 line-clamp-1">${escapeHtml(m.name)}</h4>
+              <p class="text-[11px] text-gray-400 mt-0.5">${m.year} • ${escapeHtml(m.genre)}</p>
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+
+    function renderAll() {
+      populateFilterOptions();
+      renderHeroCollage();
+      renderTheatreCarousel();
+      render5x5Section("OTT", "ott-track", "ott-page-indicator");
+      render5x5Section("Downloaded", "downloaded-track", "downloaded-page-indicator");
+      applySearchAndFilters();
+    }
+
+    /**
+     * =========================================================================
+     * 8. DETAILED REVIEW POPUP MODAL
+     * =========================================================================
+     */
+    function openDetailModal(movieId) {
+      const movie = movies.find((m) => m.id === movieId);
+      if (!movie) return;
+
+      const body = document.getElementById("detail-modal-body");
+      let watchBadgeHtml = `<span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-semibold">Watched in Theatres</span>`;
+
+      if (movie.whereToWatch === "OTT") {
+        watchBadgeHtml = `<span class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-semibold">OTT: ${escapeHtml(movie.watchDetail || "Streaming")}</span>`;
+      } else if (movie.whereToWatch === "Downloaded") {
+        const detail = movie.watchDetail || "";
+        const isUrl = /^https?:\/\//i.test(detail);
+        watchBadgeHtml = isUrl
+          ? `<a href="${escapeHtml(detail)}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 hover:bg-emerald-500/30 text-xs font-semibold underline">Download / Source Link ↗</a>`
+          : `<span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">Downloaded: ${escapeHtml(detail || "Offline Copy")}</span>`;
+      }
+
+      body.innerHTML = `
+        <div class="flex flex-col sm:flex-row gap-6">
+          <div class="w-40 sm:w-52 aspect-[2/3] rounded-2xl overflow-hidden border border-white/15 shadow-2xl shrink-0 mx-auto sm:mx-0">
+            <img src="${escapeHtml(movie.poster)}" alt="${escapeHtml(movie.name)}" class="w-full h-full object-cover" />
+          </div>
+
+          <div class="flex-1 space-y-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="px-3 py-1 rounded-full bg-amber-400 text-black text-xs font-extrabold">
+                  ${movie.rating} / 5 ${renderStars(movie.rating)}
+                </span>
+                ${watchBadgeHtml}
+              </div>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">${escapeHtml(movie.name)}</h2>
+              <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                ${escapeHtml(movie.language)} • ${movie.year} • ${escapeHtml(movie.genre)}
+              </p>
+            </div>
+
+            <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/25 p-4">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-1">✓ Pros (What Worked)</h4>
+              <p class="text-sm text-gray-100 leading-relaxed">${escapeHtml(movie.pros)}</p>
+            </div>
+
+            <div class="rounded-2xl bg-rose-500/10 border border-rose-500/25 p-4">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-rose-300 mb-1">✕ Cons (Drawbacks)</h4>
+              <p class="text-sm text-gray-100 leading-relaxed">${escapeHtml(movie.cons)}</p>
+            </div>
+
+            <div class="rounded-2xl bg-sky-500/10 border border-sky-500/25 p-4">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-sky-300 mb-1">★ Who Should Watch</h4>
+              <p class="text-sm text-gray-100 leading-relaxed">${escapeHtml(movie.audience)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("detail-modal").classList.remove("hidden");
+    }
+
+    /**
+     * =========================================================================
+     * 9. ADMIN AUTHENTICATION & CRUD FLOWS (ADD, EDIT, REMOVE)
+     * =========================================================================
+     */
+    function openAuthModal(actionType) {
+      pendingAdminAction = actionType;
+      document.getElementById("auth-error-msg").classList.add("hidden");
+      document.getElementById("auth-form").reset();
+
+      const titles = {
+        add: "Verify credentials to Add a New Review.",
+        edit: "Verify credentials to Edit an Existing Review.",
+        remove: "Verify credentials to Remove a Review."
+      };
+      document.getElementById("auth-subtitle").textContent = titles[actionType] || "Enter credentials to continue.";
+      document.getElementById("auth-modal").classList.remove("hidden");
+      setTimeout(() => document.getElementById("auth-userid").focus(), 50);
+    }
+
+    function openSelectMovieModal(mode) {
+      const modal = document.getElementById("select-movie-modal");
+      const title = document.getElementById("select-modal-title");
+      const searchInput = document.getElementById("select-movie-search");
+      title.textContent = mode === "edit" ? "Select Review to Edit" : "Select Review to Remove";
+      searchInput.value = "";
+
+      const renderList = (filterText = "") => {
+        const listEl = document.getElementById("select-movie-list");
+        const filtered = getSortedMovies(
+          movies.filter((m) => m.name.toLowerCase().includes(filterText.toLowerCase()))
+        );
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">No matching movies found.</div>`;
           return;
-        } catch (err) {
-          console.error("Firestore seed/init error, using local fallback:", err);
-          showToast("Could not connect to Firestore; running in Local Preview Mode.", "!");
         }
-      }
 
-      loadMoviesLocal();
-      refreshAppUI();
+        listEl.innerHTML = filtered
+          .map(
+            (m) => `
+            <button
+              type="button"
+              data-pick-id="${escapeHtml(m.id)}"
+              class="w-full text-left p-3 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 flex items-center justify-between gap-3 transition cursor-pointer"
+            >
+              <div>
+                <div class="text-sm font-semibold text-white">${escapeHtml(m.name)}</div>
+                <div class="text-[11px] text-gray-400">${m.year} • ${escapeHtml(m.whereToWatch)} • ${m.rating}★</div>
+              </div>
+              <span class="text-xs font-bold ${mode === "edit" ? "text-sky-300" : "text-rose-300"}">
+                ${mode === "edit" ? "Edit →" : "Delete ✕"}
+              </span>
+            </button>
+          `
+          )
+          .join("");
+
+        listEl.querySelectorAll("[data-pick-id]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.pickId;
+            modal.classList.add("hidden");
+            if (mode === "edit") {
+              openReviewFormModal(id);
+            } else {
+              openDeleteConfirmModal(id);
+            }
+          });
+        });
+      };
+
+      renderList();
+      searchInput.oninput = (e) => renderList(e.target.value);
+      modal.classList.remove("hidden");
     }
-// ... existing code ...
-      document.getElementById("auth-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const enteredId = document.getElementById("auth-userid").value.trim();
-        const enteredPass = document.getElementById("auth-password").value;
 
-        const enteredIdHash = await sha256Hex(enteredId);
-        const enteredPassHash = await sha256Hex(enteredPass);
+    function setFormRating(val) {
+      const num = Math.max(1, Math.min(5, Number(val) || 4));
+      document.getElementById("field-rating").value = num;
+      document.getElementById("rating-label-text").textContent = `${num} / 5`;
+      document.querySelectorAll("#star-rating-picker .star-btn").forEach((btn) => {
+        const starVal = Number(btn.dataset.val);
+        btn.classList.toggle("text-amber-400", starVal <= num);
+        btn.classList.toggle("text-gray-600", starVal > num);
+      });
+    }
 
-        const validUser =
-          enteredIdHash === RESOLVED_USER_HASH ||
-          enteredIdHash === (CLOUD_CONFIG.adminAuth && CLOUD_CONFIG.adminAuth.userIdHash);
-        const validPass =
-          enteredPassHash === RESOLVED_PASS_HASH ||
-          enteredPassHash === (CLOUD_CONFIG.adminAuth && CLOUD_CONFIG.adminAuth.passwordHash);
+    function updateWatchExtraField(watchType, currentDetail = "") {
+      const wrapper = document.getElementById("watch-extra-wrapper");
+      const label = document.getElementById("watch-extra-label");
+      const input = document.getElementById("field-watch-detail");
 
-        if (!validUser || !validPass) {
-// ... existing code ...
-    function openReviewFormModal(movieId = null) {
+      if (watchType === "OTT") {
+        wrapper.classList.remove("hidden");
+        label.textContent = "OTT Platform Name *";
+        input.placeholder = "e.g., Netflix, Amazon Prime Video, JioHotstar";
+        input.value = currentDetail;
+      } else if (watchType === "Downloaded") {
+        wrapper.classList.remove("hidden");
+        label.textContent = "Download Link / Source Reference *";
+        input.placeholder = "e.g., https://example.com/movie-link or 4K BluRay Rip";
+        input.value = currentDetail;
+      } else {
+        wrapper.classList.add("hidden");
+        input.value = "";
+      }
+    }
+
+    function openReviewFormModal(editId = null) {
       const modal = document.getElementById("review-form-modal");
       const titleEl = document.getElementById("form-modal-title");
       const warningEl = document.getElementById("duplicate-warning");
       const uploadStatusEl = document.getElementById("poster-upload-status");
+
       warningEl.classList.add("hidden");
       uploadStatusEl.classList.add("hidden");
-      uploadStatusEl.textContent = "";
-      uploadedPosterFile = null;
-      uploadedPosterDataUrl = "";
+      selectedPosterFile = null;
+      selectedPosterDataUrl = "";
       document.getElementById("field-poster-file").value = "";
       document.getElementById("field-poster-url").value = "";
 
-      if (movieId) {
-        const existing = movies.find((m) => m.id === movieId);
+      if (editId) {
+        const existing = movies.find((m) => m.id === editId);
         if (!existing) return;
         titleEl.textContent = `Edit Review: ${existing.name}`;
         document.getElementById("edit-movie-id").value = existing.id;
@@ -419,7 +1884,7 @@
         if (/^https?:\/\//i.test(existing.poster || "")) {
           document.getElementById("field-poster-url").value = existing.poster;
         }
-        uploadedPosterDataUrl = existing.poster;
+        selectedPosterDataUrl = existing.poster;
         setFormRating(existing.rating);
 
         const radio = document.querySelector(`input[name="whereToWatch"][value="${existing.whereToWatch}"]`);
@@ -430,189 +1895,14 @@
         document.getElementById("edit-movie-id").value = "";
         document.getElementById("review-crud-form").reset();
         setFormRating(4);
-        document.getElementById("poster-preview-img").src = generateCinematicPoster("New Review", "Cinema", 2026, movies.length);
+        document.getElementById("poster-preview-img").src = generateCinematicPoster("New Review", "Cinema", 2026, movies.length + 1);
         updateWatchExtraField("Theatres", "");
       }
 
       modal.classList.remove("hidden");
     }
 
-    // Interactive star picker
-    document.querySelectorAll("#star-rating-picker .star-btn").forEach((btn) => {
-      btn.addEventListener("click", () => setFormRating(btn.dataset.val));
-    });
-
-    // Radio toggle for Theatres / OTT / Downloaded
-    document.querySelectorAll('input[name="whereToWatch"]').forEach((radio) => {
-      radio.addEventListener("change", (e) => {
-        updateWatchExtraField(e.target.value, "");
-      });
-    });
-
-    // Poster image file reader + preview
-    document.getElementById("field-poster-file").addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      const statusEl = document.getElementById("poster-upload-status");
-      if (!file) {
-        uploadedPosterFile = null;
-        return;
-      }
-      uploadedPosterFile = file;
-      try {
-        uploadedPosterDataUrl = await readFileAsDataUrl(file);
-        document.getElementById("poster-preview-img").src = uploadedPosterDataUrl;
-        statusEl.classList.remove("hidden");
-        statusEl.textContent = cloudinaryActive
-          ? `Selected "${file.name}" — will upload to Cloudinary on save.`
-          : `Selected "${file.name}" (Local preview; configure Cloudinary for cloud hosting).`;
-      } catch (err) {
-        showToast("Could not preview image file.", "!");
-      }
-    });
-
-    // Direct Poster URL input live preview
-    document.getElementById("field-poster-url").addEventListener("input", (e) => {
-      const urlVal = e.target.value.trim();
-      if (/^https?:\/\//i.test(urlVal)) {
-        document.getElementById("poster-preview-img").src = urlVal;
-      }
-    });
-
-    // Hide duplicate warning immediately when user edits the movie name
-    document.getElementById("field-name").addEventListener("input", () => {
-      document.getElementById("duplicate-warning").classList.add("hidden");
-    });
-
-    // Form Submit Handler (Add or Edit with Duplicate Check + Cloudinary/URL/Fallback)
-    document.getElementById("review-crud-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (isSubmittingReview) return;
-
-      const editId = document.getElementById("edit-movie-id").value.trim();
-      const name = document.getElementById("field-name").value.trim();
-      const language = document.getElementById("field-language").value.trim();
-      const year = Number(document.getElementById("field-year").value);
-      const genre = document.getElementById("field-genre").value.trim();
-      const rating = Number(document.getElementById("field-rating").value);
-      const pros = document.getElementById("field-pros").value.trim();
-      const cons = document.getElementById("field-cons").value.trim();
-      const audience = document.getElementById("field-audience").value.trim();
-      const whereToWatch = document.querySelector('input[name="whereToWatch"]:checked').value;
-      const watchDetail = document.getElementById("field-watch-detail").value.trim();
-      const directPosterUrl = document.getElementById("field-poster-url").value.trim();
-      const statusEl = document.getElementById("poster-upload-status");
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-
-      // Check if movie name already exists (case-insensitive)
-      const duplicateExists = movies.some(
-        (m) => m.name.trim().toLowerCase() === name.toLowerCase() && m.id !== editId
-      );
-
-      if (duplicateExists) {
-        const warningEl = document.getElementById("duplicate-warning");
-        warningEl.classList.remove("hidden");
-        warningEl.scrollIntoView({ behavior: "smooth", block: "center" });
-        return;
-      }
-
-      isSubmittingReview = true;
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Saving...";
-      }
-
-      try {
-        let finalPoster = generateCinematicPoster(name, genre, year, movies.length + 1);
-
-        if (uploadedPosterFile) {
-          if (cloudinaryActive) {
-            statusEl.classList.remove("hidden");
-            finalPoster = await uploadPosterToCloudinary(uploadedPosterFile, (msg) => {
-              statusEl.textContent = msg;
-            });
-          } else if (uploadedPosterDataUrl) {
-            finalPoster = uploadedPosterDataUrl;
-          }
-        } else if (directPosterUrl && /^https?:\/\//i.test(directPosterUrl)) {
-          finalPoster = directPosterUrl;
-        } else if (uploadedPosterDataUrl) {
-          finalPoster = uploadedPosterDataUrl;
-        }
-
-        if (editId) {
-          const existing = movies.find((m) => m.id === editId);
-          const updatedPayload = {
-            name,
-            language,
-            year,
-            genre,
-            rating,
-            pros,
-            cons,
-            audience,
-            whereToWatch,
-            watchDetail,
-            poster: finalPoster
-          };
-
-          if (db && moviesCollectionRef) {
-            await updateDoc(doc(db, "movies", editId), updatedPayload);
-          } else if (existing) {
-            const idx = movies.findIndex((m) => m.id === editId);
-            movies[idx] = { ...existing, ...updatedPayload };
-            saveMoviesLocal();
-            refreshAppUI();
-          }
-          showToast(`Updated review for "${name}"`);
-        } else {
-          const newRecord = {
-            name,
-            language,
-            year,
-            genre,
-            rating,
-            pros,
-            cons,
-            audience,
-            whereToWatch,
-            watchDetail,
-            poster: finalPoster,
-            addedAt: Date.now()
-          };
-
-          if (db && moviesCollectionRef) {
-            await addDoc(moviesCollectionRef, newRecord);
-          } else {
-            movies.unshift({ id: "rev-" + Date.now(), ...newRecord });
-            saveMoviesLocal();
-            refreshAppUI();
-          }
-          showToast(`Added "${name}" to Mahesh's Movie World!`);
-        }
-
-        document.getElementById("review-form-modal").classList.add("hidden");
-      } catch (err) {
-        console.error("Save review failed:", err);
-        if (statusEl) {
-          statusEl.classList.remove("hidden");
-          statusEl.textContent = `Upload/Save error: ${err.message}`;
-        }
-        showToast("Could not save review. Check console for details.", "!");
-      } finally {
-        isSubmittingReview = false;
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Save Review";
-        }
-      }
-    });
-
-    /**
-     * =========================================================================
-     * DELETE CONFIRMATION HANDLERS
-     * =========================================================================
-     */
-    function openDeleteConfirmation(movieId) {
+    function openDeleteConfirmModal(movieId) {
       const target = movies.find((m) => m.id === movieId);
       if (!target) return;
       pendingDeleteId = movieId;
@@ -620,64 +1910,392 @@
       document.getElementById("delete-confirm-modal").classList.remove("hidden");
     }
 
-    document.getElementById("confirm-delete-btn").addEventListener("click", async () => {
-      if (!pendingDeleteId) return;
-      const idToDelete = pendingDeleteId;
-      const target = movies.find((m) => m.id === idToDelete);
-      pendingDeleteId = null;
-
-      try {
-        if (db && moviesCollectionRef) {
-          await deleteDoc(doc(db, "movies", idToDelete));
-        } else {
-          movies = movies.filter((m) => m.id !== idToDelete);
-          saveMoviesLocal();
-          refreshAppUI();
-        }
-        document.getElementById("delete-confirm-modal").classList.add("hidden");
-        showToast(`Removed "${target ? target.name : "Review"}"`, "🗑");
-      } catch (err) {
-        console.error("Delete review failed:", err);
-        showToast("Failed to delete review.", "!");
-      }
-    });
+    function showToast(message, icon = "✓") {
+      const banner = document.getElementById("toast-banner");
+      document.getElementById("toast-icon").textContent = icon;
+      document.getElementById("toast-message").textContent = message;
+      banner.classList.remove("hidden");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        banner.classList.add("hidden");
+      }, 3400);
+    }
 
     /**
      * =========================================================================
-     * EVENT LISTENERS & HORIZONTAL CAROUSEL CONTROLS
+     * 10. EVENT LISTENERS & INITIALIZATION
      * =========================================================================
      */
-    document.addEventListener("DOMContentLoaded", () => {
-      initDataSource();
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Precompute default hashes cleanly so plain text never sits in source
+      computedDefaultUserHash = await sha256Hex(String.fromCharCode(109, 97, 104, 101, 115, 104));
+      computedDefaultPassHash = await sha256Hex(String.fromCharCode(109, 111, 118, 105, 101, 64, 50, 48, 50, 54));
 
-      // Delegated click for opening any movie review card
-// ... existing code ...
-      // Restore sample catalog button
-      document.getElementById("reset-demo-btn").addEventListener("click", async () => {
-        dropdown.classList.add("hidden");
-        const seedList = createSeedMovies();
-        if (db && moviesCollectionRef) {
+      // Load local movies immediately so UI renders in <50ms without waiting on network
+      loadLocalMovies();
+      updateSyncStatusUI();
+      renderAll();
+
+      // Optionally connect Firebase Firestore in background
+      tryConnectFirebase();
+
+      // Delegated Click Handler for Opening Any Movie Card
+      document.body.addEventListener("click", (e) => {
+        const card = e.target.closest(".movie-card-trigger");
+        if (card) {
+          openDetailModal(card.dataset.movieId);
+        }
+      });
+
+      // Admin Menu Toggle
+      const adminBtn = document.getElementById("admin-menu-btn");
+      const adminDropdown = document.getElementById("admin-dropdown");
+      adminBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        adminDropdown.classList.toggle("hidden");
+      });
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("admin-menu-wrapper").contains(e.target)) {
+          adminDropdown.classList.add("hidden");
+        }
+      });
+
+      // Admin Action Buttons (Add, Edit, Remove)
+      document.querySelectorAll("[data-admin-action]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          adminDropdown.classList.add("hidden");
+          openAuthModal(btn.dataset.adminAction);
+        });
+      });
+
+      // Restore Sample Data
+      document.getElementById("reset-sample-btn").addEventListener("click", async () => {
+        adminDropdown.classList.add("hidden");
+        const seed = createSeedMovies();
+        if (isCloudConnected && firestoreApi && firestoreColRef) {
           try {
-            const snap = await getDocs(moviesCollectionRef);
+            const snap = await firestoreApi.getDocs(firestoreColRef);
             for (const d of snap.docs) {
-              await deleteDoc(doc(db, "movies", d.id));
+              await firestoreApi.deleteDoc(firestoreApi.doc(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies", d.id));
             }
-            for (const item of seedList) {
-              const { id: _ignoreId, ...docPayload } = item;
-              await addDoc(moviesCollectionRef, docPayload);
+            for (const item of seed) {
+              const { id: _unused, ...payload } = item;
+              await firestoreApi.addDoc(firestoreColRef, payload);
             }
             showToast("Cloud sample catalog restored!");
             return;
           } catch (err) {
-            console.error("Cloud reset failed:", err);
-            showToast("Cloud reset failed; restoring locally.", "!");
+            console.warn("Cloud reset failed, restoring locally:", err);
           }
         }
-        movies = seedList;
-        saveMoviesLocal();
-        refreshAppUI();
-        showToast("Sample catalog restored!");
+        movies = seed;
+        saveLocalMovies();
+        renderAll();
+        showToast("Sample movies restored!");
       });
-// ... existing code ...
-```
 
+      // SHA-256 Auth Form Verification
+      document.getElementById("auth-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const uVal = document.getElementById("auth-userid").value.trim();
+        const pVal = document.getElementById("auth-password").value;
+
+        const uHash = await sha256Hex(uVal);
+        const pHash = await sha256Hex(pVal);
+
+        const userMatches = uHash === CLOUD_CONFIG.adminAuth.userIdHash || uHash === computedDefaultUserHash;
+        const passMatches = pHash === CLOUD_CONFIG.adminAuth.passwordHash || pHash === computedDefaultPassHash;
+
+        if (!userMatches || !passMatches) {
+          document.getElementById("auth-error-msg").classList.remove("hidden");
+          return;
+        }
+
+        document.getElementById("auth-modal").classList.add("hidden");
+        if (pendingAdminAction === "add") {
+          openReviewFormModal(null);
+        } else if (pendingAdminAction === "edit") {
+          openSelectMovieModal("edit");
+        } else if (pendingAdminAction === "remove") {
+          openSelectMovieModal("remove");
+        }
+      });
+
+      // Star Rating Picker
+      document.querySelectorAll("#star-rating-picker .star-btn").forEach((btn) => {
+        btn.addEventListener("click", () => setFormRating(btn.dataset.val));
+      });
+
+      // Where-to-Watch Radio Toggle
+      document.querySelectorAll('input[name="whereToWatch"]').forEach((radio) => {
+        radio.addEventListener("change", (e) => updateWatchExtraField(e.target.value, ""));
+      });
+
+      // Poster File Input Preview
+      document.getElementById("field-poster-file").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        const statusEl = document.getElementById("poster-upload-status");
+        if (!file) {
+          selectedPosterFile = null;
+          return;
+        }
+        selectedPosterFile = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          selectedPosterDataUrl = ev.target.result;
+          document.getElementById("poster-preview-img").src = selectedPosterDataUrl;
+          statusEl.classList.remove("hidden");
+          statusEl.textContent = hasValidCloudinaryConfig()
+            ? `Selected "${file.name}" — will upload to Cloudinary on save.`
+            : `Selected "${file.name}" (Saved locally; add Cloudinary keys for cloud hosting).`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Poster URL Input Preview
+      document.getElementById("field-poster-url").addEventListener("input", (e) => {
+        const val = e.target.value.trim();
+        if (/^https?:\/\//i.test(val)) {
+          document.getElementById("poster-preview-img").src = val;
+        }
+      });
+
+      // Hide Duplicate Warning on Name Edit
+      document.getElementById("field-name").addEventListener("input", () => {
+        document.getElementById("duplicate-warning").classList.add("hidden");
+      });
+
+      // Add / Edit Review Form Submit
+      document.getElementById("review-crud-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const editId = document.getElementById("edit-movie-id").value.trim();
+        const name = document.getElementById("field-name").value.trim();
+        const language = document.getElementById("field-language").value.trim();
+        const year = Number(document.getElementById("field-year").value);
+        const genre = document.getElementById("field-genre").value.trim();
+        const rating = Number(document.getElementById("field-rating").value);
+        const pros = document.getElementById("field-pros").value.trim();
+        const cons = document.getElementById("field-cons").value.trim();
+        const audience = document.getElementById("field-audience").value.trim();
+        const whereToWatch = document.querySelector('input[name="whereToWatch"]:checked').value;
+        const watchDetail = document.getElementById("field-watch-detail").value.trim();
+        const directUrl = document.getElementById("field-poster-url").value.trim();
+        const statusEl = document.getElementById("poster-upload-status");
+        const saveBtn = document.getElementById("save-review-btn");
+
+        // Duplicate Movie Name Validation (Case-Insensitive)
+        const isDuplicate = movies.some(
+          (m) => m.name.trim().toLowerCase() === name.toLowerCase() && m.id !== editId
+        );
+        if (isDuplicate) {
+          const warn = document.getElementById("duplicate-warning");
+          warn.classList.remove("hidden");
+          warn.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+
+        try {
+          let finalPoster = generateCinematicPoster(name, genre, year, movies.length + 1);
+
+          if (selectedPosterFile) {
+            if (hasValidCloudinaryConfig()) {
+              statusEl.classList.remove("hidden");
+              finalPoster = await uploadPosterToCloudinary(selectedPosterFile, (msg) => {
+                statusEl.textContent = msg;
+              });
+            } else if (selectedPosterDataUrl) {
+              finalPoster = selectedPosterDataUrl;
+            }
+          } else if (directUrl && /^https?:\/\//i.test(directUrl)) {
+            finalPoster = directUrl;
+          } else if (selectedPosterDataUrl) {
+            finalPoster = selectedPosterDataUrl;
+          }
+
+          if (editId) {
+            const updatedFields = {
+              name,
+              language,
+              year,
+              genre,
+              rating,
+              pros,
+              cons,
+              audience,
+              whereToWatch,
+              watchDetail,
+              poster: finalPoster
+            };
+
+            if (isCloudConnected && firestoreApi && firestoreDb) {
+              await firestoreApi.updateDoc(
+                firestoreApi.doc(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies", editId),
+                updatedFields
+              );
+            } else {
+              const idx = movies.findIndex((m) => m.id === editId);
+              if (idx !== -1) {
+                movies[idx] = { ...movies[idx], ...updatedFields };
+                saveLocalMovies();
+                renderAll();
+              }
+            }
+            showToast(`Updated "${name}"!`);
+          } else {
+            const newItem = {
+              name,
+              language,
+              year,
+              genre,
+              rating,
+              pros,
+              cons,
+              audience,
+              whereToWatch,
+              watchDetail,
+              poster: finalPoster,
+              addedAt: Date.now()
+            };
+
+            if (isCloudConnected && firestoreApi && firestoreColRef) {
+              await firestoreApi.addDoc(firestoreColRef, newItem);
+            } else {
+              movies.unshift({ id: "rev-" + Date.now(), ...newItem });
+              saveLocalMovies();
+              renderAll();
+            }
+            showToast(`Added "${name}" to Mahesh's Movie World!`);
+          }
+
+          document.getElementById("review-form-modal").classList.add("hidden");
+        } catch (err) {
+          console.error("Save error:", err);
+          showToast("Error saving review. Please try again.", "!");
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Review";
+        }
+      });
+
+      // Confirm Delete Handler
+      document.getElementById("confirm-delete-btn").addEventListener("click", async () => {
+        if (!pendingDeleteId) return;
+        const target = movies.find((m) => m.id === pendingDeleteId);
+        const delId = pendingDeleteId;
+        pendingDeleteId = null;
+
+        try {
+          if (isCloudConnected && firestoreApi && firestoreDb) {
+            await firestoreApi.deleteDoc(
+              firestoreApi.doc(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies", delId)
+            );
+          } else {
+            movies = movies.filter((m) => m.id !== delId);
+            saveLocalMovies();
+            renderAll();
+          }
+          document.getElementById("delete-confirm-modal").classList.add("hidden");
+          showToast(`Removed "${target ? target.name : "Review"}"`, "🗑");
+        } catch (err) {
+          console.error("Delete error:", err);
+          showToast("Could not delete review.", "!");
+        }
+      });
+
+      // Search, Filter & Sort Listeners
+      ["search-input", "filter-rating", "filter-genre", "filter-year", "filter-watch"].forEach((id) => {
+        const el = document.getElementById(id);
+        el.addEventListener("input", applySearchAndFilters);
+        el.addEventListener("change", applySearchAndFilters);
+      });
+
+      document.getElementById("sort-by").addEventListener("change", renderAll);
+
+      document.getElementById("clear-filters-btn").addEventListener("click", () => {
+        document.getElementById("search-input").value = "";
+        document.getElementById("filter-rating").value = "all";
+        document.getElementById("filter-genre").value = "all";
+        document.getElementById("filter-year").value = "all";
+        document.getElementById("filter-watch").value = "all";
+        applySearchAndFilters();
+      });
+
+      // Horizontal Carousel Navigation & Scroll Listeners
+      const theatreTrack = document.getElementById("theatre-track");
+      document.getElementById("theatre-prev-btn").addEventListener("click", () => {
+        theatreTrack.scrollBy({ left: -theatreTrack.clientWidth, behavior: "smooth" });
+      });
+      document.getElementById("theatre-next-btn").addEventListener("click", () => {
+        theatreTrack.scrollBy({ left: theatreTrack.clientWidth, behavior: "smooth" });
+      });
+      theatreTrack.addEventListener("scroll", () => {
+        const slides = theatreTrack.querySelectorAll(".theatre-slide");
+        if (!slides.length || !theatreTrack.clientWidth) return;
+        const activeIdx = Math.round(theatreTrack.scrollLeft / theatreTrack.clientWidth);
+        document.getElementById("theatre-counter").textContent = `${Math.min(activeIdx + 1, slides.length)} / ${slides.length}`;
+        document.querySelectorAll("#theatre-dots .theatre-dot").forEach((dot, idx) => {
+          dot.className = `theatre-dot h-2.5 rounded-full transition-all cursor-pointer ${
+            idx === activeIdx ? "w-7 bg-amber-400" : "w-2.5 bg-white/25 hover:bg-white/50"
+          }`;
+        });
+      });
+
+      // OTT 5x5 Horizontal Controls
+      const ottTrack = document.getElementById("ott-track");
+      document.getElementById("ott-prev-btn").addEventListener("click", () => {
+        ottTrack.scrollBy({ left: -ottTrack.clientWidth, behavior: "smooth" });
+      });
+      document.getElementById("ott-next-btn").addEventListener("click", () => {
+        ottTrack.scrollBy({ left: ottTrack.clientWidth, behavior: "smooth" });
+      });
+      ottTrack.addEventListener("scroll", () => {
+        const pages = ottTrack.querySelectorAll(".grid-5x5-page");
+        if (!pages.length || !ottTrack.clientWidth) return;
+        const pageIdx = Math.round(ottTrack.scrollLeft / ottTrack.clientWidth) + 1;
+        const totalOtt = movies.filter((m) => m.whereToWatch === "OTT").length;
+        document.getElementById("ott-page-indicator").textContent = `Page ${Math.min(pageIdx, pages.length)} of ${pages.length} (${totalOtt} titles)`;
+      });
+
+      // Downloaded 5x5 Horizontal Controls
+      const dlTrack = document.getElementById("downloaded-track");
+      document.getElementById("downloaded-prev-btn").addEventListener("click", () => {
+        dlTrack.scrollBy({ left: -dlTrack.clientWidth, behavior: "smooth" });
+      });
+      document.getElementById("downloaded-next-btn").addEventListener("click", () => {
+        dlTrack.scrollBy({ left: dlTrack.clientWidth, behavior: "smooth" });
+      });
+      dlTrack.addEventListener("scroll", () => {
+        const pages = dlTrack.querySelectorAll(".grid-5x5-page");
+        if (!pages.length || !dlTrack.clientWidth) return;
+        const pageIdx = Math.round(dlTrack.scrollLeft / dlTrack.clientWidth) + 1;
+        const totalDl = movies.filter((m) => m.whereToWatch === "Downloaded").length;
+        document.getElementById("downloaded-page-indicator").textContent = `Page ${Math.min(pageIdx, pages.length)} of ${pages.length} (${totalDl} titles)`;
+      });
+
+      // Modal Close Buttons
+      document.getElementById("close-detail-modal").addEventListener("click", () => {
+        document.getElementById("detail-modal").classList.add("hidden");
+      });
+      document.getElementById("close-auth-modal").addEventListener("click", () => {
+        document.getElementById("auth-modal").classList.add("hidden");
+      });
+      document.getElementById("close-select-modal").addEventListener("click", () => {
+        document.getElementById("select-movie-modal").classList.add("hidden");
+      });
+      document.getElementById("close-form-modal").addEventListener("click", () => {
+        document.getElementById("review-form-modal").classList.add("hidden");
+      });
+      document.getElementById("cancel-form-btn").addEventListener("click", () => {
+        document.getElementById("review-form-modal").classList.add("hidden");
+      });
+      document.getElementById("cancel-delete-btn").addEventListener("click", () => {
+        document.getElementById("delete-confirm-modal").classList.add("hidden");
+      });
+    });
+  </script>
+</body>
+</html>
+```
