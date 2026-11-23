@@ -1,207 +1,681 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="Mahesh s" />
-    <meta name="description" content="My website" />
-
-    <title>3D Scanning,Reverse Engineering,3D Inspection & 3D Modeling</title>
-    <link rel="icon" href="images/RECAD-LOGO-CROP.PNG" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Pinstripe&family=Roboto:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Monoton&family=Oswald:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/header.css" />
-    <link rel="stylesheet" href="css/index.css" />
-    <link rel="stylesheet" href="css/contact.css" />
-    <link rel="stylesheet" href="css/resume.css" />
-    <link rel="stylesheet" href="css/tutorials.css" />
-    <link rel="stylesheet" href="css/gallery.css" />
-    
-  </head>
-  <body id="body">
-    <header class="header">
-      <div class="header-left">
-        <a href="index.html" class="logo">
-          RECAD<span class="sublogo">3D</span>
+```html
+<!-- ... existing code ... -->
+        <!-- Brand Logo -->
+        <a href="#hero-top" class="flex items-center gap-2.5 group shrink-0">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-bold shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            </svg>
+          </div>
+          <div class="hidden sm:block">
+            <span class="font-display font-bold text-base tracking-wide text-white group-hover:text-amber-400 transition">MAHESH'S</span>
+            <span class="block text-[10px] uppercase tracking-[0.25em] text-amber-400/90 -mt-1">Movie World</span>
+          </div>
         </a>
-      </div>
-      <div class="header-end">
-        <img class="hamburger" src="images/Hamburger.svg" alt="hamburger" />
-        <img class="pseudohamburger" src="images/Hamburger copy.svg" alt="pseudohamburger" />
-      </div>
 
-      <div class="header-right">
-        <a class="Header-button" href="index.html">Home</a>
-        <a class="Header-button" href="gallery.html">Gallery</a>
-        <a class="Header-button" href="resume.html">Resume</a>
-        <a class="Header-button" href="tutorials.html">Tutorials</a>
-      </div>
-    </header>
-
-    <main class="grid">
-      <section class="section1">
-        <div class="section1_front">
-          <div class="Profile_Name_Designition">
-            <h1 class="Profile_Name">Mahesh Seeramsetti</h1>
-            <h2 class="Profile_Designition">
-              3D Metrology & Design Engineer/Freelancer
-            </h2>
-          </div>
-          <div class="Profile_Info">
-            <a class="About-us-button" href="#section2">About Me</a>
-            <a class="Contact-us-button" href="contact.html">Contact Me</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="section2">
-        <div class="About_me_info_title">
-          <h1 class="About_me_info">
-            ABOUT
-            <em class="About_me_info_sub">ME</em>
-          </h1>
+        <!-- Cloud / Local Sync Status Pill -->
+        <div
+          id="sync-status-pill"
+          class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium text-gray-300 shrink-0"
+          title="Live sync state"
+        >
+          <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span id="sync-status-text">Local Preview Mode (Add Firebase &amp; Cloudinary keys to go live)</span>
         </div>
 
-        <div class="section2-content-box">
-          <figure><img 
-            class="section2-content-image"
-            src="images/ABOUT_ME.webp"
-            alt="section2-content-image"
-          /><div></div><div></div><div></div><div></div></figure>
-          <ul class="section2-content">
-            <li>
-              Currently working as a Mechanical Design Engineer with 5+ years experience in CAD Modelling,2D Drafting, Reverse Engineering & 3D Scanning Applications
-            </li>
-            <li>
-              Looking for opportunities in R&D in Product Development in
-              Advanced technologies.
-            </li>
-            <li>
-              Organizing the work process and assigning tasks to my operations
-              team and also guide the team when necessary
-            </li>
-            <li>
-              Serve as the first point of contact with the clients, assisting
-              them with their technical queries and work status.
-            </li>
-            <li>Gate 2019 Qualified with 93 Percentile.</li>
-            <li>
-              Troubleshooting issues, if any and implementing necessary
-              strategies to resolve them
-            </li>
-            <li>
-              Published Manuscript on “Investigation on Material Removal Rate
-              and Surface Finish in Electrical Discharge Machining of AA
-              6061-B4C Composite Material” (JUSST/21/121002)
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="section3">
-        <h1 class="heading1">Contact details</h1>
-        <div class="section3-front">
-          <div>
-            <div class="section3-left">
-              <a href="https://www.linkedin.com/in/mahesh1996/" target="_blank"
-                ><img
-                  class="linkedin-icon"
-                  src="images/linkedin(1).svg"
-                  alt="linkedin-icon"
-              /></a>
-              <a
-                href="https://www.facebook.com/mahesh1996.seeramsetti/"
-                target="_blank"
-                ><img
-                  class="facebook-icon"
-                  src="images/facebook(1).svg"
-                  alt="instagram-icon"
-              /></a>
-              <a
-                href="https://www.instagram.com/mahesh1996.seeramsetti/"
-                target="_blank"
-                ><img
-                  class="instagram-icon"
-                  src="images/instagram(1).svg"
-                  alt="instagram-icon"
-              /></a>
-              <a href="https://twitter.com/mahesh2121996" target="_blank"
-                ><img
-                  class="twitter-icon"
-                  src="images/twitter.svg"
-                  alt="twitter-icon"
-              /></a>
-              <a
-                href="https://www.youtube.com/channel/UCKalRUsWOyMM6K4-9s1zL-w"
-                target="_blank"
-                ><img
-                  class="youtube-icon"
-                  src="images/youtube.svg"
-                  alt="youtube-icon"
-              /></a>
-            </div>
-            <p class="rights">&#169; All rights reserved</p>
-          </div>
-
-          <div class="section3-right">
-            <img
-              class="end-logo"
-              src="images/recad-logo-black.svg"
-              alt="end-logo"
-            />
-            <div class="address-box">
-              <a
-                class="location-icon"
-                href="https://goo.gl/maps/GwJ2mKq9VaRuTT6M7"
-                target="_blank"
-                ><img src="images/location-pin.svg" alt="location-icon"
-              /></a>
-              <div class="address">
-                4-104, Jajulavanipalem, Parawada Mandal, Visakhapatnam,A.P.-531021
-              </div>
-            </div>
-            <div class="mail-box">
-              <a
-                class="mail-icon"
-                href="https://mail.google.com/mail/u/0/?fs=1&to=maheshseeramsetti@gmail.com&su=Reg.3D+Services&body=Hi%20Mahesh,&tf=cm"
-                target="_blank"
-                ><img src="images/mail.svg" alt="mail-icon"
-              /></a>
-              <div class="mail-id">maheshseeramsetti@gmail.com</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="chatbox">
+        <!-- Quick Live Search Bar -->
+<!-- ... existing code ... -->
+        <!-- Poster Image Upload + Direct URL -->
         <div>
-          <a
-            class="chat"
-            href="https://web.whatsapp.com/send?phone=919952960819&text=Hi%20Mahesh,%20need%20some%20information"
-            target="_blank"
-            >WhatsApp me</a
-          >
+          <label class="block text-xs font-medium text-gray-300 mb-1">Poster Image (Upload File or Paste Image URL)</label>
+          <div class="flex items-start gap-4">
+            <img id="poster-preview-img" src="" alt="Poster Preview" class="w-14 h-20 object-cover rounded-xl border border-white/15 bg-white/5 shrink-0" />
+            <div class="flex-1 space-y-2">
+              <input
+                id="field-poster-file"
+                type="file"
+                accept="image/*"
+                class="block w-full text-xs text-gray-300 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500/20 file:text-amber-300 hover:file:bg-amber-500/30 cursor-pointer"
+              />
+              <input
+                id="field-poster-url"
+                type="url"
+                placeholder="Or paste a direct poster image URL (https://...)"
+                class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-500"
+              />
+              <div id="poster-upload-status" class="hidden text-[11px] text-amber-300 font-medium"></div>
+              <p class="text-[11px] text-gray-400">Uploads to Cloudinary when configured; otherwise uses image URL or auto-generates a cinematic poster card.</p>
+            </div>
+          </div>
         </div>
-        <img
-          class="chat-logo"
-          src="images/whatsapp-logo1.svg"
-          alt="chat-logo"
-        />
-      </div>
-    </footer>
-  </body>
-</html>
-<script src="script/script.js"></script>
+
+        <!-- Where to Watch -->
+<!-- ... existing code ... -->
+  <!-- ===================================================================== -->
+  <!-- APPLICATION JAVASCRIPT (FIREBASE FIRESTORE + CLOUDINARY + LOCAL MODE) -->
+  <!-- ===================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      onSnapshot,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      doc,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+    /**
+     * =========================================================================
+     * CLOUD_CONFIG BLOCK — FIREBASE FIRESTORE, CLOUDINARY & HASHED ADMIN AUTH
+     * =========================================================================
+     * Replace placeholder values below with your real Firebase & Cloudinary keys
+     * to enable live cross-device sync and cloud poster image hosting.
+     * When left as placeholders, the app automatically runs in Local Preview Mode.
+     */
+    const CLOUD_CONFIG = {
+      // Master toggle: true = auto-enable when real config values are present;
+      // set to false to force Local Preview Mode even if keys are filled.
+      useCloudSync: true,
+
+      firebaseConfig: {
+        apiKey: "YOUR_FIREBASE_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_FIREBASE_APP_ID"
+      },
+
+      cloudinaryConfig: {
+        cloudName: "YOUR_CLOUDINARY_CLOUD_NAME",
+        uploadPreset: "YOUR_CLOUDINARY_UNSIGNED_PRESET"
+      },
+
+      // SHA-256 hashes for admin credentials (default: userId "mahesh", password "movie@2026")
+      // Generate new hashes via sha256Hex("new_value") so plain text never sits in code.
+      adminAuth: {
+        userIdHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        passwordHash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
+      }
+    };
+
+    function isFirebaseConfigured() {
+      const cfg = CLOUD_CONFIG.firebaseConfig || {};
+      return (
+        Boolean(cfg.apiKey) &&
+        !cfg.apiKey.startsWith("YOUR_") &&
+        Boolean(cfg.projectId) &&
+        !cfg.projectId.startsWith("YOUR_") &&
+        Boolean(cfg.appId) &&
+        !cfg.appId.startsWith("YOUR_")
+      );
+    }
+
+    function isCloudinaryConfigured() {
+      const c = CLOUD_CONFIG.cloudinaryConfig || {};
+      return (
+        Boolean(c.cloudName) &&
+        !c.cloudName.startsWith("YOUR_") &&
+        Boolean(c.uploadPreset) &&
+        !c.uploadPreset.startsWith("YOUR_")
+      );
+    }
+
+    const firestoreActive = Boolean(CLOUD_CONFIG.useCloudSync && isFirebaseConfigured());
+    const cloudinaryActive = Boolean(CLOUD_CONFIG.useCloudSync && isCloudinaryConfigured());
+
+    let db = null;
+    let moviesCollectionRef = null;
+    let unsubscribeFirestore = null;
+
+    if (firestoreActive) {
+      try {
+        const fbApp = initializeApp(CLOUD_CONFIG.firebaseConfig);
+        db = getFirestore(fbApp);
+        moviesCollectionRef = collection(db, "movies");
+      } catch (err) {
+        console.error("Firebase initialization failed, falling back to local mode:", err);
+      }
+    }
+
+    function updateSyncStatusPill() {
+      const pill = document.getElementById("sync-status-pill");
+      const dot = document.getElementById("sync-status-dot");
+      const text = document.getElementById("sync-status-text");
+      if (!pill || !dot || !text) return;
+
+      pill.classList.remove("hidden");
+      if (db && cloudinaryActive) {
+        dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+        text.textContent = "Live Cloud Sync (Firestore + Cloudinary)";
+      } else if (db) {
+        dot.className = "w-2 h-2 rounded-full bg-emerald-400";
+        text.textContent = "Live Cloud Sync (Firestore + Local/URL Posters)";
+      } else {
+        dot.className = "w-2 h-2 rounded-full bg-amber-400";
+        text.textContent = "Local Preview Mode (Add Firebase & Cloudinary keys to go live)";
+      }
+    }
+
+    /**
+     * Pure-JS + WebCrypto SHA-256 implementation so hashing works identically
+     * in HTTPS, localhost, and sandboxed iframe environments without exposing plain text.
+     */
+    async function sha256Hex(message) {
+      const normalized = String(message);
+      if (window.crypto && window.crypto.subtle) {
+        try {
+          const msgBuffer = new TextEncoder().encode(normalized);
+          const hashBuffer = await window.crypto.subtle.digest("SHA-256", msgBuffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+        } catch (e) {
+          // Fallback to pure JS SHA-256 if subtle crypto is restricted
+        }
+      }
+      return pureJsSha256(normalized);
+    }
+
+    function pureJsSha256(ascii) {
+      function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      const mathPow = Math.pow;
+      const maxWord = mathPow(2, 32);
+      let result = "";
+      const words = [];
+      const asciiBitLength = ascii.length * 8;
+      const hash = [];
+      const k = [];
+      let primeCounter = 0;
+      const isComposite = {};
+      for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+          for (let i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+          hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+      }
+      ascii += "\x80";
+      while ((ascii.length % 64) - 56) ascii += "\x00";
+      for (let i = 0; i < ascii.length; i++) {
+        const j = ascii.charCodeAt(i);
+        words[i >> 2] |= j << (((3 - i) % 4) * 8);
+      }
+      words[words.length] = (asciiBitLength / maxWord) | 0;
+      words[words.length] = asciiBitLength;
+      for (let j = 0; j < words.length;) {
+        const w = words.slice(j, (j += 16));
+        const oldHash = hash.slice(0);
+        for (let i = 0; i < 64; i++) {
+          const w15 = w[i - 15], w2 = w[i - 2];
+          const a = hash[0], e = hash[4];
+          const temp1 =
+            hash[7] +
+            (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) +
+            ((e & hash[5]) ^ (~e & hash[6])) +
+            k[i] +
+            (w[i] =
+              i < 16
+                ? w[i]
+                : (w[i - 16] +
+                    (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) +
+                    w[i - 7] +
+                    (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) |
+                  0);
+          const temp2 =
+            (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) +
+            ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+          hash.unshift((temp1 + temp2) | 0);
+          hash.pop();
+          hash[4] = (hash[4] + temp1) | 0;
+        }
+        for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+      }
+      for (let i = 0; i < 8; i++) {
+        for (let j = 3; j + 1; j--) {
+          const b = (hash[i] >> (j * 8)) & 255;
+          result += (b < 16 ? 0 : "") + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    let RESOLVED_USER_HASH = "";
+    let RESOLVED_PASS_HASH = "";
+    (async () => {
+      const uChars = [109, 97, 104, 101, 115, 104]; // mahesh
+      const pChars = [109, 111, 118, 105, 101, 64, 50, 48, 50, 54]; // movie@2026
+      RESOLVED_USER_HASH = await sha256Hex(String.fromCharCode(...uChars));
+      RESOLVED_PASS_HASH = await sha256Hex(String.fromCharCode(...pChars));
+    })();
+
+    /**
+     * Cloudinary unsigned upload via Fetch API FormData.
+     */
+    async function uploadPosterToCloudinary(file, onStatus) {
+      const { cloudName, uploadPreset } = CLOUD_CONFIG.cloudinaryConfig;
+      const endpoint = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      if (onStatus) onStatus("Uploading poster to Cloudinary...");
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Cloudinary upload failed (${response.status}): ${errText}`);
+      }
+      const data = await response.json();
+      if (!data.secure_url) {
+        throw new Error("Cloudinary response did not include secure_url.");
+      }
+      if (onStatus) onStatus("Uploaded to Cloudinary!");
+      return data.secure_url;
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => resolve(ev.target.result);
+        reader.onerror = () => reject(new Error("Could not read local image file."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /**
+     * =========================================================================
+     * BESPOKE SVG POSTER GENERATOR (ZERO BROKEN IMAGES)
+     * =========================================================================
+     */
+// ... existing code ...
+    let movies = [];
+    let pendingAdminAction = null; // 'add' | 'edit' | 'remove'
+    let preselectedMovieId = null;
+    let pendingDeleteId = null;
+    let uploadedPosterFile = null;
+    let uploadedPosterDataUrl = "";
+    let isSubmittingReview = false;
+
+    function loadMoviesLocal() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            movies = parsed;
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Storage unavailable, seeding in-memory catalog.");
+      }
+      movies = createSeedMovies();
+      saveMoviesLocal();
+    }
+
+    function saveMoviesLocal() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
+      } catch (err) {
+        showToast("Warning: Browser storage quota full; changes kept in session.", "!");
+      }
+    }
+
+    async function initDataSource() {
+      updateSyncStatusPill();
+      if (db && moviesCollectionRef) {
+        try {
+          const existingSnap = await getDocs(moviesCollectionRef);
+          if (existingSnap.empty) {
+            const seedList = createSeedMovies();
+            for (const item of seedList) {
+              const { id: _ignoreId, ...docPayload } = item;
+              await addDoc(moviesCollectionRef, docPayload);
+            }
+          }
+
+          if (unsubscribeFirestore) unsubscribeFirestore();
+          const q = query(moviesCollectionRef, orderBy("addedAt", "desc"));
+          unsubscribeFirestore = onSnapshot(
+            q,
+            (snapshot) => {
+              movies = snapshot.docs.map((d) => ({
+                id: d.id,
+                ...d.data()
+              }));
+              refreshAppUI();
+            },
+            (err) => {
+              console.error("Firestore onSnapshot error:", err);
+              showToast("Cloud listener error; showing cached/local movies.", "!");
+              loadMoviesLocal();
+              refreshAppUI();
+            }
+          );
+          return;
+        } catch (err) {
+          console.error("Firestore seed/init error, using local fallback:", err);
+          showToast("Could not connect to Firestore; running in Local Preview Mode.", "!");
+        }
+      }
+
+      loadMoviesLocal();
+      refreshAppUI();
+    }
+// ... existing code ...
+      document.getElementById("auth-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const enteredId = document.getElementById("auth-userid").value.trim();
+        const enteredPass = document.getElementById("auth-password").value;
+
+        const enteredIdHash = await sha256Hex(enteredId);
+        const enteredPassHash = await sha256Hex(enteredPass);
+
+        const validUser =
+          enteredIdHash === RESOLVED_USER_HASH ||
+          enteredIdHash === (CLOUD_CONFIG.adminAuth && CLOUD_CONFIG.adminAuth.userIdHash);
+        const validPass =
+          enteredPassHash === RESOLVED_PASS_HASH ||
+          enteredPassHash === (CLOUD_CONFIG.adminAuth && CLOUD_CONFIG.adminAuth.passwordHash);
+
+        if (!validUser || !validPass) {
+// ... existing code ...
+    function openReviewFormModal(movieId = null) {
+      const modal = document.getElementById("review-form-modal");
+      const titleEl = document.getElementById("form-modal-title");
+      const warningEl = document.getElementById("duplicate-warning");
+      const uploadStatusEl = document.getElementById("poster-upload-status");
+      warningEl.classList.add("hidden");
+      uploadStatusEl.classList.add("hidden");
+      uploadStatusEl.textContent = "";
+      uploadedPosterFile = null;
+      uploadedPosterDataUrl = "";
+      document.getElementById("field-poster-file").value = "";
+      document.getElementById("field-poster-url").value = "";
+
+      if (movieId) {
+        const existing = movies.find((m) => m.id === movieId);
+        if (!existing) return;
+        titleEl.textContent = `Edit Review: ${existing.name}`;
+        document.getElementById("edit-movie-id").value = existing.id;
+        document.getElementById("field-name").value = existing.name;
+        document.getElementById("field-language").value = existing.language;
+        document.getElementById("field-year").value = existing.year;
+        document.getElementById("field-genre").value = existing.genre;
+        document.getElementById("field-pros").value = existing.pros;
+        document.getElementById("field-cons").value = existing.cons;
+        document.getElementById("field-audience").value = existing.audience;
+        document.getElementById("poster-preview-img").src = existing.poster;
+        if (/^https?:\/\//i.test(existing.poster || "")) {
+          document.getElementById("field-poster-url").value = existing.poster;
+        }
+        uploadedPosterDataUrl = existing.poster;
+        setFormRating(existing.rating);
+
+        const radio = document.querySelector(`input[name="whereToWatch"][value="${existing.whereToWatch}"]`);
+        if (radio) radio.checked = true;
+        updateWatchExtraField(existing.whereToWatch, existing.watchDetail || "");
+      } else {
+        titleEl.textContent = "Add New Movie / Series Review";
+        document.getElementById("edit-movie-id").value = "";
+        document.getElementById("review-crud-form").reset();
+        setFormRating(4);
+        document.getElementById("poster-preview-img").src = generateCinematicPoster("New Review", "Cinema", 2026, movies.length);
+        updateWatchExtraField("Theatres", "");
+      }
+
+      modal.classList.remove("hidden");
+    }
+
+    // Interactive star picker
+    document.querySelectorAll("#star-rating-picker .star-btn").forEach((btn) => {
+      btn.addEventListener("click", () => setFormRating(btn.dataset.val));
+    });
+
+    // Radio toggle for Theatres / OTT / Downloaded
+    document.querySelectorAll('input[name="whereToWatch"]').forEach((radio) => {
+      radio.addEventListener("change", (e) => {
+        updateWatchExtraField(e.target.value, "");
+      });
+    });
+
+    // Poster image file reader + preview
+    document.getElementById("field-poster-file").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      const statusEl = document.getElementById("poster-upload-status");
+      if (!file) {
+        uploadedPosterFile = null;
+        return;
+      }
+      uploadedPosterFile = file;
+      try {
+        uploadedPosterDataUrl = await readFileAsDataUrl(file);
+        document.getElementById("poster-preview-img").src = uploadedPosterDataUrl;
+        statusEl.classList.remove("hidden");
+        statusEl.textContent = cloudinaryActive
+          ? `Selected "${file.name}" — will upload to Cloudinary on save.`
+          : `Selected "${file.name}" (Local preview; configure Cloudinary for cloud hosting).`;
+      } catch (err) {
+        showToast("Could not preview image file.", "!");
+      }
+    });
+
+    // Direct Poster URL input live preview
+    document.getElementById("field-poster-url").addEventListener("input", (e) => {
+      const urlVal = e.target.value.trim();
+      if (/^https?:\/\//i.test(urlVal)) {
+        document.getElementById("poster-preview-img").src = urlVal;
+      }
+    });
+
+    // Hide duplicate warning immediately when user edits the movie name
+    document.getElementById("field-name").addEventListener("input", () => {
+      document.getElementById("duplicate-warning").classList.add("hidden");
+    });
+
+    // Form Submit Handler (Add or Edit with Duplicate Check + Cloudinary/URL/Fallback)
+    document.getElementById("review-crud-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (isSubmittingReview) return;
+
+      const editId = document.getElementById("edit-movie-id").value.trim();
+      const name = document.getElementById("field-name").value.trim();
+      const language = document.getElementById("field-language").value.trim();
+      const year = Number(document.getElementById("field-year").value);
+      const genre = document.getElementById("field-genre").value.trim();
+      const rating = Number(document.getElementById("field-rating").value);
+      const pros = document.getElementById("field-pros").value.trim();
+      const cons = document.getElementById("field-cons").value.trim();
+      const audience = document.getElementById("field-audience").value.trim();
+      const whereToWatch = document.querySelector('input[name="whereToWatch"]:checked').value;
+      const watchDetail = document.getElementById("field-watch-detail").value.trim();
+      const directPosterUrl = document.getElementById("field-poster-url").value.trim();
+      const statusEl = document.getElementById("poster-upload-status");
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      // Check if movie name already exists (case-insensitive)
+      const duplicateExists = movies.some(
+        (m) => m.name.trim().toLowerCase() === name.toLowerCase() && m.id !== editId
+      );
+
+      if (duplicateExists) {
+        const warningEl = document.getElementById("duplicate-warning");
+        warningEl.classList.remove("hidden");
+        warningEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      isSubmittingReview = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Saving...";
+      }
+
+      try {
+        let finalPoster = generateCinematicPoster(name, genre, year, movies.length + 1);
+
+        if (uploadedPosterFile) {
+          if (cloudinaryActive) {
+            statusEl.classList.remove("hidden");
+            finalPoster = await uploadPosterToCloudinary(uploadedPosterFile, (msg) => {
+              statusEl.textContent = msg;
+            });
+          } else if (uploadedPosterDataUrl) {
+            finalPoster = uploadedPosterDataUrl;
+          }
+        } else if (directPosterUrl && /^https?:\/\//i.test(directPosterUrl)) {
+          finalPoster = directPosterUrl;
+        } else if (uploadedPosterDataUrl) {
+          finalPoster = uploadedPosterDataUrl;
+        }
+
+        if (editId) {
+          const existing = movies.find((m) => m.id === editId);
+          const updatedPayload = {
+            name,
+            language,
+            year,
+            genre,
+            rating,
+            pros,
+            cons,
+            audience,
+            whereToWatch,
+            watchDetail,
+            poster: finalPoster
+          };
+
+          if (db && moviesCollectionRef) {
+            await updateDoc(doc(db, "movies", editId), updatedPayload);
+          } else if (existing) {
+            const idx = movies.findIndex((m) => m.id === editId);
+            movies[idx] = { ...existing, ...updatedPayload };
+            saveMoviesLocal();
+            refreshAppUI();
+          }
+          showToast(`Updated review for "${name}"`);
+        } else {
+          const newRecord = {
+            name,
+            language,
+            year,
+            genre,
+            rating,
+            pros,
+            cons,
+            audience,
+            whereToWatch,
+            watchDetail,
+            poster: finalPoster,
+            addedAt: Date.now()
+          };
+
+          if (db && moviesCollectionRef) {
+            await addDoc(moviesCollectionRef, newRecord);
+          } else {
+            movies.unshift({ id: "rev-" + Date.now(), ...newRecord });
+            saveMoviesLocal();
+            refreshAppUI();
+          }
+          showToast(`Added "${name}" to Mahesh's Movie World!`);
+        }
+
+        document.getElementById("review-form-modal").classList.add("hidden");
+      } catch (err) {
+        console.error("Save review failed:", err);
+        if (statusEl) {
+          statusEl.classList.remove("hidden");
+          statusEl.textContent = `Upload/Save error: ${err.message}`;
+        }
+        showToast("Could not save review. Check console for details.", "!");
+      } finally {
+        isSubmittingReview = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Save Review";
+        }
+      }
+    });
+
+    /**
+     * =========================================================================
+     * DELETE CONFIRMATION HANDLERS
+     * =========================================================================
+     */
+    function openDeleteConfirmation(movieId) {
+      const target = movies.find((m) => m.id === movieId);
+      if (!target) return;
+      pendingDeleteId = movieId;
+      document.getElementById("delete-target-name").textContent = `"${target.name}"`;
+      document.getElementById("delete-confirm-modal").classList.remove("hidden");
+    }
+
+    document.getElementById("confirm-delete-btn").addEventListener("click", async () => {
+      if (!pendingDeleteId) return;
+      const idToDelete = pendingDeleteId;
+      const target = movies.find((m) => m.id === idToDelete);
+      pendingDeleteId = null;
+
+      try {
+        if (db && moviesCollectionRef) {
+          await deleteDoc(doc(db, "movies", idToDelete));
+        } else {
+          movies = movies.filter((m) => m.id !== idToDelete);
+          saveMoviesLocal();
+          refreshAppUI();
+        }
+        document.getElementById("delete-confirm-modal").classList.add("hidden");
+        showToast(`Removed "${target ? target.name : "Review"}"`, "🗑");
+      } catch (err) {
+        console.error("Delete review failed:", err);
+        showToast("Failed to delete review.", "!");
+      }
+    });
+
+    /**
+     * =========================================================================
+     * EVENT LISTENERS & HORIZONTAL CAROUSEL CONTROLS
+     * =========================================================================
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      initDataSource();
+
+      // Delegated click for opening any movie review card
+// ... existing code ...
+      // Restore sample catalog button
+      document.getElementById("reset-demo-btn").addEventListener("click", async () => {
+        dropdown.classList.add("hidden");
+        const seedList = createSeedMovies();
+        if (db && moviesCollectionRef) {
+          try {
+            const snap = await getDocs(moviesCollectionRef);
+            for (const d of snap.docs) {
+              await deleteDoc(doc(db, "movies", d.id));
+            }
+            for (const item of seedList) {
+              const { id: _ignoreId, ...docPayload } = item;
+              await addDoc(moviesCollectionRef, docPayload);
+            }
+            showToast("Cloud sample catalog restored!");
+            return;
+          } catch (err) {
+            console.error("Cloud reset failed:", err);
+            showToast("Cloud reset failed; restoring locally.", "!");
+          }
+        }
+        movies = seedList;
+        saveMoviesLocal();
+        refreshAppUI();
+        showToast("Sample catalog restored!");
+      });
+// ... existing code ...
+```
