@@ -78,7 +78,7 @@
 
     /* Glassmorphic Card Styling */
     .glass-panel {
-      background: rgba(17, 20, 30, 0.68);
+      background: rgba(17, 20, 30, 0.78);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -122,6 +122,11 @@
       scroll-snap-align: center;
     }
 
+    /* Expandable Header Search Bar Transition */
+    #header-search-bar {
+      transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+    }
+
     /* Modal Backdrop Fade */
     @keyframes modalIn {
       from { opacity: 0; transform: scale(0.96) translateY(8px); }
@@ -135,12 +140,12 @@
 <body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
 
   <!-- ===================================================================== -->
-  <!-- TOP NAVIGATION BAR WITH SYNC STATUS & HAMBURGER ADMIN MENU            -->
+  <!-- TOP NAVIGATION BAR WITH EXPANDABLE SEARCH ICON & HAMBURGER MENU       -->
   <!-- ===================================================================== -->
   <header class="sticky top-0 z-40 glass-panel border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
       <!-- Brand Identity -->
-      <a href="#hero-top" class="flex items-center gap-2.5 group shrink-0">
+      <a href="#hero-top" id="header-brand-link" class="flex items-center gap-2.5 group shrink-0">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-extrabold shadow-lg shadow-amber-500/25 group-hover:scale-105 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
@@ -153,18 +158,68 @@
       </a>
 
       <!-- Cloud / Local Status Indicator -->
-      <div id="sync-status-pill" class="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium text-gray-300">
+      <div id="sync-status-pill" class="hidden xl:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium text-gray-300">
         <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
         <span id="sync-status-text">Connecting Sync...</span>
       </div>
 
-      <!-- Quick Jump Links & Hamburger Admin Menu -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <nav class="hidden lg:flex items-center gap-1 text-xs font-medium text-gray-300">
+      <!-- Quick Jump Links, Expandable Search & Hamburger Admin Menu -->
+      <div class="flex items-center gap-2 sm:gap-2.5 ml-auto">
+        <nav id="header-nav-links" class="hidden lg:flex items-center gap-1 text-xs font-medium text-gray-300 mr-1">
           <a href="#section-theatres" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Theatres</a>
           <a href="#section-ott" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">OTT 5×5</a>
           <a href="#section-downloaded" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Downloaded 5×5</a>
         </nav>
+
+        <!-- Expandable Header Search Control -->
+        <div class="flex items-center">
+          <!-- Collapsed Search Trigger Icon -->
+          <button
+            id="header-search-toggle"
+            type="button"
+            aria-label="Search Movies and Web-Series"
+            title="Search & Filter"
+            class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/15 border border-white/15 text-gray-200 hover:text-amber-300 flex items-center justify-center transition cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+            </svg>
+          </button>
+
+          <!-- Expanded Inline Search Input + Filter Drawer Toggle -->
+          <div
+            id="header-search-bar"
+            class="hidden items-center gap-1.5 bg-[#0f1320] border border-amber-400/50 rounded-xl px-2.5 py-1 shadow-lg shadow-amber-500/10 w-56 sm:w-80 md:w-96"
+          >
+            <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+            </svg>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search movies or series..."
+              autocomplete="off"
+              class="w-full bg-transparent text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none py-1"
+            />
+            <button
+              id="header-filter-toggle"
+              type="button"
+              title="Toggle Filter & Sort Options"
+              class="px-2 py-1 rounded-lg bg-white/10 hover:bg-amber-500/20 text-[11px] font-semibold text-amber-300 shrink-0 transition cursor-pointer"
+            >
+              Filters
+            </button>
+            <button
+              id="header-search-close"
+              type="button"
+              aria-label="Close Search"
+              title="Close Search"
+              class="w-6 h-6 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center text-xs shrink-0 transition cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
 
         <!-- Hamburger-Only Admin Actions Dropdown -->
         <div class="relative" id="admin-menu-wrapper">
@@ -226,7 +281,98 @@
         </div>
       </div>
     </div>
+
+    <!-- Compact Expandable Filter & Sort Tray (Revealed when clicking "Filters" inside expanded search) -->
+    <div id="header-filter-tray" class="hidden border-t border-white/10 bg-[#0b0e18]/95 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+          <div>
+            <label for="filter-rating" class="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Rating</label>
+            <select id="filter-rating" class="w-full px-2.5 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+              <option value="all">All Ratings</option>
+              <option value="5">★★★★★ (5 Stars)</option>
+              <option value="4">★★★★☆ (4+ Stars)</option>
+              <option value="3">★★★☆☆ (3+ Stars)</option>
+              <option value="2">★★☆☆☆ (2+ Stars)</option>
+              <option value="1">★☆☆☆☆ (1+ Stars)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-genre" class="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Genre</label>
+            <select id="filter-genre" class="w-full px-2.5 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+              <option value="all">All Genres</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-year" class="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Release Year</label>
+            <select id="filter-year" class="w-full px-2.5 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+              <option value="all">All Years</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="filter-watch" class="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Where to Watch</label>
+            <select id="filter-watch" class="w-full px-2.5 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+              <option value="all">All Sources</option>
+              <option value="Theatres">Theatres</option>
+              <option value="OTT">OTT</option>
+              <option value="Downloaded">Downloaded</option>
+            </select>
+          </div>
+
+          <div class="col-span-2 sm:col-span-1">
+            <label for="sort-by" class="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Sort By</label>
+            <select id="sort-by" class="w-full px-2.5 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
+              <option value="recent">Recently Added</option>
+              <option value="rating-desc">Rating: High to Low</option>
+              <option value="rating-asc">Rating: Low to High</option>
+              <option value="year-desc">Year: Newest First</option>
+              <option value="year-asc">Year: Oldest First</option>
+              <option value="name-asc">Name: A → Z</option>
+              <option value="name-desc">Name: Z → A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-2.5 flex items-center justify-between text-xs">
+          <span id="filter-status-label" class="text-gray-400">Showing all reviews</span>
+          <button
+            id="clear-filters-btn"
+            type="button"
+            class="hidden px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-300 font-semibold transition cursor-pointer"
+          >
+            Reset Search &amp; Filters ✕
+          </button>
+        </div>
+      </div>
+    </div>
   </header>
+
+  <!-- ===================================================================== -->
+  <!-- ACTIVE SEARCH / FILTER RESULTS DRAWER (APPEARS ONLY WHEN SEARCHING)   -->
+  <!-- ===================================================================== -->
+  <section id="filtered-results-section" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    <div class="glass-panel rounded-2xl p-5 border border-amber-500/30">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base sm:text-lg font-bold text-amber-300 flex items-center gap-2">
+          <span>Search &amp; Filter Results</span>
+          <span id="filtered-count-badge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-xs text-amber-200">0</span>
+        </h2>
+        <button
+          id="close-results-panel-btn"
+          type="button"
+          class="text-xs text-gray-400 hover:text-white px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition cursor-pointer"
+        >
+          Clear &amp; Close ✕
+        </button>
+      </div>
+      <div id="filtered-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <!-- Populated dynamically when searching/filtering -->
+      </div>
+    </div>
+  </section>
 
   <!-- ===================================================================== -->
   <!-- HERO SECTION: "MAHESH SEERAMSETTI'S MOVIE WORLD" + LAST 10 BLURRED BG  -->
@@ -276,115 +422,14 @@
           <a href="#section-theatres" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm transition shadow-lg shadow-amber-500/20">
             Explore Reviews ↓
           </a>
-          <a href="#search-filter-bar" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium text-sm transition">
-            Search &amp; Filter
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================================================================== -->
-  <!-- SEARCH, FILTER & SORT CONTROL BAR                                     -->
-  <!-- ===================================================================== -->
-  <section id="search-filter-bar" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
-    <div class="glass-panel rounded-2xl p-4 sm:p-5 border border-white/10">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-        <!-- Search by Movie Name -->
-        <div class="lg:col-span-2 relative">
-          <label for="search-input" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Search Movies / Series</label>
-          <div class="relative">
-            <input
-              id="search-input"
-              type="text"
-              placeholder="Search by movie or series title..."
-              class="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-amber-400"
-            />
-            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
-            </svg>
-          </div>
-        </div>
-
-        <!-- Filter by Rating -->
-        <div>
-          <label for="filter-rating" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Rating</label>
-          <select id="filter-rating" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
-            <option value="all">All Ratings</option>
-            <option value="5">★★★★★ (5 Stars)</option>
-            <option value="4">★★★★☆ (4+ Stars)</option>
-            <option value="3">★★★☆☆ (3+ Stars)</option>
-            <option value="2">★★☆☆☆ (2+ Stars)</option>
-            <option value="1">★☆☆☆☆ (1+ Stars)</option>
-          </select>
-        </div>
-
-        <!-- Filter by Genre -->
-        <div>
-          <label for="filter-genre" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Genre</label>
-          <select id="filter-genre" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
-            <option value="all">All Genres</option>
-          </select>
-        </div>
-
-        <!-- Filter by Release Year -->
-        <div>
-          <label for="filter-year" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Release Year</label>
-          <select id="filter-year" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
-            <option value="all">All Years</option>
-          </select>
-        </div>
-
-        <!-- Filter by Where to Watch -->
-        <div>
-          <label for="filter-watch" class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Where to Watch</label>
-          <select id="filter-watch" class="w-full px-3 py-2 rounded-xl bg-[#111522] border border-white/15 text-sm text-white focus:outline-none focus:border-amber-400">
-            <option value="all">All Sources</option>
-            <option value="Theatres">Theatres</option>
-            <option value="OTT">OTT</option>
-            <option value="Downloaded">Downloaded</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Sort & Clear Controls Row -->
-      <div class="mt-3 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <label for="sort-by" class="text-xs font-medium text-gray-400">Sort By:</label>
-          <select id="sort-by" class="px-3 py-1.5 rounded-xl bg-[#111522] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400">
-            <option value="recent">Recently Added</option>
-            <option value="rating-desc">Rating: High to Low</option>
-            <option value="rating-asc">Rating: Low to High</option>
-            <option value="year-desc">Release Year: Newest First</option>
-            <option value="year-asc">Release Year: Oldest First</option>
-            <option value="name-asc">Name: A → Z</option>
-            <option value="name-desc">Name: Z → A</option>
-          </select>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <span id="filter-status-label" class="text-xs text-gray-400">Showing all reviews</span>
           <button
-            id="clear-filters-btn"
+            id="hero-search-trigger"
             type="button"
-            class="hidden px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-300 text-xs font-semibold transition cursor-pointer"
+            class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium text-sm transition cursor-pointer"
           >
-            Clear Filters ✕
+            Search &amp; Filter
           </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Active Search / Filter Results Panel (Appears dynamically when filtering/searching) -->
-    <div id="filtered-results-section" class="hidden mt-6 glass-panel rounded-2xl p-5 border border-amber-500/30">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">
-          <span>Filtered &amp; Sorted Matches</span>
-          <span id="filtered-count-badge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-xs text-amber-200">0</span>
-        </h2>
-      </div>
-      <div id="filtered-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        <!-- Populated when search/filters are active -->
       </div>
     </div>
   </section>
@@ -392,7 +437,7 @@
   <!-- ===================================================================== -->
   <!-- MAIN 3-TIER SHOWCASE FLOW                                             -->
   <!-- ===================================================================== -->
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-14 flex-1">
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14 flex-1">
 
     <!-- =================================================================== -->
     <!-- TIER 1: WATCHED IN THEATRES (1 MOVIE PER SLIDE, HORIZONTAL SCROLL)  -->
@@ -846,11 +891,6 @@
      * =========================================================================
      * 1. CLOUD_CONFIG & SHA-256 ADMIN CREDENTIALS (EDITABLE IN CODE)
      * =========================================================================
-     * - ADMIN CREDENTIALS (SHA-256 HASHED — NO PLAIN TEXT STORED IN CODE):
-     *   Default User ID : "mahesh"
-     *   Default Password: "movie@2026"
-     *   To change credentials: compute the SHA-256 hex digest of your new
-     *   User ID and Password and paste them below.
      */
     const CLOUD_CONFIG = {
       useCloudSync: true,
@@ -1120,7 +1160,6 @@
         )
       ];
 
-      // 28 OTT Releases so horizontal 5x5 pagination (Page 1: 25, Page 2: 3) works immediately
       const ottSeedData = [
         ["Panchayat (Season 3)", "Hindi", 2024, "Comedy / Drama", 5, "Prime Video"],
         ["The Family Man", "Hindi", 2021, "Spy / Thriller", 5, "Prime Video"],
@@ -1167,7 +1206,6 @@
         )
       );
 
-      // 27 Downloaded Movies so horizontal 5x5 pagination (Page 1: 25, Page 2: 2) works immediately
       const downloadSeedData = [
         ["Inception", "English", 2010, "Sci-Fi / Heist", 5, "https://archive.example.org/inception-4k"],
         ["Interstellar", "English", 2014, "Sci-Fi / Drama", 5, "https://archive.example.org/interstellar-imax"],
@@ -1262,7 +1300,7 @@
         text.textContent = "Live Cloud Sync (Firebase Firestore Active)";
       } else {
         dot.className = "w-2 h-2 rounded-full bg-amber-400";
-        text.textContent = "Local Mode Active (Configure Firebase & Cloudinary for Cloud Sync)";
+        text.textContent = "Local Mode Active";
       }
     }
 
@@ -1277,7 +1315,6 @@
         firestoreColRef = fsMod.collection(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies");
         firestoreApi = fsMod;
 
-        // Seed Firestore if empty
         const initialSnap = await fsMod.getDocs(firestoreColRef);
         if (initialSnap.empty) {
           const seed = createSeedMovies();
@@ -1287,7 +1324,6 @@
           }
         }
 
-        // Real-time listener
         const q = fsMod.query(firestoreColRef, fsMod.orderBy("addedAt", "desc"));
         fsMod.onSnapshot(
           q,
@@ -1335,7 +1371,7 @@
      * =========================================================================
      */
     let movies = [];
-    let pendingAdminAction = null; // 'add' | 'edit' | 'remove' | 'restore'
+    let pendingAdminAction = null;
     let pendingDeleteId = null;
     let selectedPosterFile = null;
     let selectedPosterDataUrl = "";
@@ -1369,7 +1405,49 @@
 
     /**
      * =========================================================================
-     * 7. RENDERING ENGINE (HERO COLLAGE, THEATRES SLIDER, 5x5 OTT & DOWNLOAD)
+     * 7. EXPANDABLE HEADER SEARCH HELPERS
+     * =========================================================================
+     */
+    function openHeaderSearch(showFilters = false) {
+      const toggleBtn = document.getElementById("header-search-toggle");
+      const searchBar = document.getElementById("header-search-bar");
+      const filterTray = document.getElementById("header-filter-tray");
+      const input = document.getElementById("search-input");
+
+      toggleBtn.classList.add("hidden");
+      searchBar.classList.remove("hidden");
+      searchBar.classList.add("flex");
+
+      if (showFilters) {
+        filterTray.classList.remove("hidden");
+      }
+
+      setTimeout(() => input.focus(), 40);
+    }
+
+    function closeHeaderSearch() {
+      const toggleBtn = document.getElementById("header-search-toggle");
+      const searchBar = document.getElementById("header-search-bar");
+      const filterTray = document.getElementById("header-filter-tray");
+
+      searchBar.classList.add("hidden");
+      searchBar.classList.remove("flex");
+      filterTray.classList.add("hidden");
+      toggleBtn.classList.remove("hidden");
+    }
+
+    function resetAllSearchAndFilters() {
+      document.getElementById("search-input").value = "";
+      document.getElementById("filter-rating").value = "all";
+      document.getElementById("filter-genre").value = "all";
+      document.getElementById("filter-year").value = "all";
+      document.getElementById("filter-watch").value = "all";
+      applySearchAndFilters();
+    }
+
+    /**
+     * =========================================================================
+     * 8. RENDERING ENGINE (HERO COLLAGE, THEATRES SLIDER, 5x5 OTT & DOWNLOAD)
      * =========================================================================
      */
     function renderStars(rating) {
@@ -1407,7 +1485,6 @@
       }
     }
 
-    // Hero Blurred Collage of Last 10 Added Movies/WebSeries
     function renderHeroCollage() {
       const container = document.getElementById("hero-collage-grid");
       if (!container) return;
@@ -1431,7 +1508,6 @@
         })
         .join("");
 
-      // Update Hero Quick Stats
       document.getElementById("stat-total").textContent = movies.length;
       const avg = movies.length
         ? (movies.reduce((acc, m) => acc + Number(m.rating || 0), 0) / movies.length).toFixed(1)
@@ -1440,7 +1516,6 @@
       document.getElementById("stat-recent-count").textContent = last10.length;
     }
 
-    // Tier 1: Watched in Theatres (1 Movie Per Slide, Horizontal Scroll)
     function renderTheatreCarousel() {
       const track = document.getElementById("theatre-track");
       const dotsContainer = document.getElementById("theatre-dots");
@@ -1532,7 +1607,6 @@
       });
     }
 
-    // Helper: Render a 5x5 Grid Section (25 movie blocks per horizontal page)
     function render5x5Section(categoryName, trackId, indicatorId) {
       const track = document.getElementById(trackId);
       const indicator = document.getElementById(indicatorId);
@@ -1547,7 +1621,7 @@
         return;
       }
 
-      const pageSize = 25; // Strict 5x5 = 25 blocks per page
+      const pageSize = 25;
       const pages = [];
       for (let i = 0; i < list.length; i += pageSize) {
         pages.push(list.slice(i, i + pageSize));
@@ -1596,7 +1670,6 @@
       indicator.textContent = `Page 1 of ${pages.length} (${list.length} titles)`;
     }
 
-    // Populate Dynamic Genre & Release Year Filter Dropdowns
     function populateFilterOptions() {
       const genreSelect = document.getElementById("filter-genre");
       const yearSelect = document.getElementById("filter-year");
@@ -1618,7 +1691,6 @@
       if ([...yearSelect.options].some((o) => o.value === currentYear)) yearSelect.value = currentYear;
     }
 
-    // Apply Search, Filter & Sort Panel
     function applySearchAndFilters() {
       const queryText = document.getElementById("search-input").value.trim().toLowerCase();
       const ratingMin = document.getElementById("filter-rating").value;
@@ -1705,7 +1777,7 @@
 
     /**
      * =========================================================================
-     * 8. DETAILED REVIEW POPUP MODAL
+     * 9. DETAILED REVIEW POPUP MODAL
      * =========================================================================
      */
     function openDetailModal(movieId) {
@@ -1768,7 +1840,7 @@
 
     /**
      * =========================================================================
-     * 9. ADMIN AUTHENTICATION & CRUD FLOWS (ADD, EDIT, REMOVE, RESTORE)
+     * 10. ADMIN AUTHENTICATION & CRUD FLOWS (ADD, EDIT, REMOVE, RESTORE)
      * =========================================================================
      */
     function openAuthModal(actionType) {
@@ -1943,21 +2015,42 @@
 
     /**
      * =========================================================================
-     * 10. EVENT LISTENERS & INITIALIZATION
+     * 11. EVENT LISTENERS & INITIALIZATION
      * =========================================================================
      */
     document.addEventListener("DOMContentLoaded", async () => {
-      // Precompute default hashes cleanly so plain text never sits in source
       computedDefaultUserHash = await sha256Hex(String.fromCharCode(109, 97, 104, 101, 115, 104));
       computedDefaultPassHash = await sha256Hex(String.fromCharCode(109, 111, 118, 105, 101, 64, 50, 48, 50, 54));
 
-      // Load local movies immediately so UI renders in <50ms without waiting on network
       loadLocalMovies();
       updateSyncStatusUI();
       renderAll();
 
-      // Connect Firebase Firestore in background
       tryConnectFirebase();
+
+      // Expandable Header Search Controls
+      document.getElementById("header-search-toggle").addEventListener("click", () => openHeaderSearch(false));
+      document.getElementById("hero-search-trigger").addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        openHeaderSearch(true);
+      });
+      document.getElementById("header-filter-toggle").addEventListener("click", () => {
+        document.getElementById("header-filter-tray").classList.toggle("hidden");
+      });
+      document.getElementById("header-search-close").addEventListener("click", () => {
+        resetAllSearchAndFilters();
+        closeHeaderSearch();
+      });
+      document.getElementById("close-results-panel-btn").addEventListener("click", () => {
+        resetAllSearchAndFilters();
+        closeHeaderSearch();
+      });
+      document.getElementById("search-input").addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          resetAllSearchAndFilters();
+          closeHeaderSearch();
+        }
+      });
 
       // Delegated Click Handler for Opening Any Movie Card
       document.body.addEventListener("click", (e) => {
@@ -1980,7 +2073,7 @@
         }
       });
 
-      // Admin Action Buttons (Add, Edit, Remove, Restore — all protected by SHA-256 auth)
+      // Admin Action Buttons
       document.querySelectorAll("[data-admin-action]").forEach((btn) => {
         btn.addEventListener("click", () => {
           adminDropdown.classList.add("hidden");
@@ -2116,7 +2209,6 @@
         const statusEl = document.getElementById("poster-upload-status");
         const saveBtn = document.getElementById("save-review-btn");
 
-        // Duplicate Movie Name Validation (Case-Insensitive)
         const isDuplicate = movies.some(
           (m) => m.name.trim().toLowerCase() === name.toLowerCase() && m.id !== editId
         );
@@ -2246,15 +2338,7 @@
       });
 
       document.getElementById("sort-by").addEventListener("change", renderAll);
-
-      document.getElementById("clear-filters-btn").addEventListener("click", () => {
-        document.getElementById("search-input").value = "";
-        document.getElementById("filter-rating").value = "all";
-        document.getElementById("filter-genre").value = "all";
-        document.getElementById("filter-year").value = "all";
-        document.getElementById("filter-watch").value = "all";
-        applySearchAndFilters();
-      });
+      document.getElementById("clear-filters-btn").addEventListener("click", resetAllSearchAndFilters);
 
       // Horizontal Carousel Navigation & Scroll Listeners
       const theatreTrack = document.getElementById("theatre-track");
