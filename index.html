@@ -909,10 +909,10 @@
         uploadPreset: "Movie_posters_unsigned"
       },
       adminAuth: {
-        // SHA-256("mahesh")
-        userIdHash: "1334d3989f11a9118207148f8f54f516c3c6f233686f57d7d767754f67921549",
-        // SHA-256("movie@2026")
-        passwordHash: "8c61347f30164e154f25823d2805a988176733223405c2276a09a56e4d26956f"
+        // SHA-256 of configured User ID
+        userIdHash: "3c44c3e1b8b7844786724ac776d3d90ee7eac452bdbcb44495b77dec2ef73cfe",
+        // SHA-256 of configured Password
+        passwordHash: "372f7e2fd2d01ce2a1d71dc072acbba4c6fd25a1087cd7f153f4ec0ce37e1ede"
       }
     };
 
@@ -1375,8 +1375,6 @@
     let pendingDeleteId = null;
     let selectedPosterFile = null;
     let selectedPosterDataUrl = "";
-    let computedDefaultUserHash = "";
-    let computedDefaultPassHash = "";
 
     function loadLocalMovies() {
       try {
@@ -2019,9 +2017,6 @@
      * =========================================================================
      */
     document.addEventListener("DOMContentLoaded", async () => {
-      computedDefaultUserHash = await sha256Hex(String.fromCharCode(109, 97, 104, 101, 115, 104));
-      computedDefaultPassHash = await sha256Hex(String.fromCharCode(109, 111, 118, 105, 101, 64, 50, 48, 50, 54));
-
       loadLocalMovies();
       updateSyncStatusUI();
       renderAll();
@@ -2090,8 +2085,8 @@
         const uHash = await sha256Hex(uVal);
         const pHash = await sha256Hex(pVal);
 
-        const userMatches = uHash === CLOUD_CONFIG.adminAuth.userIdHash || uHash === computedDefaultUserHash;
-        const passMatches = pHash === CLOUD_CONFIG.adminAuth.passwordHash || pHash === computedDefaultPassHash;
+        const userMatches = uHash === CLOUD_CONFIG.adminAuth.userIdHash;
+        const passMatches = pHash === CLOUD_CONFIG.adminAuth.passwordHash;
 
         if (!userMatches || !passMatches) {
           document.getElementById("auth-error-msg").classList.remove("hidden");
