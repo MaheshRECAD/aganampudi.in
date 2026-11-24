@@ -388,7 +388,7 @@
     <div class="absolute inset-0 bg-gradient-to-b from-[#07080c]/70 via-transparent to-[#07080c] pointer-events-none"></div>
 
     <!-- Center Glassmorphic Title Card -->
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center">
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center">
       <div class="glass-panel rounded-3xl px-6 py-10 sm:px-12 sm:py-14 border border-white/15">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-5">
           <span>★ Personal Cinema &amp; Web-Series Archive</span>
@@ -415,6 +415,85 @@
           <div class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2.5">
             <div id="stat-recent-count" class="text-lg sm:text-2xl font-bold text-emerald-400">10</div>
             <div class="text-[11px] text-gray-400 uppercase tracking-wider">Hero Backdrop</div>
+          </div>
+        </div>
+
+        <!-- Visual 5-Tier Rating Scale Cards -->
+        <div class="mt-8 text-left">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-300/90">How I Rate Movies</span>
+            <span class="text-[11px] text-gray-400">Tap any tier to filter</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+            <button
+              type="button"
+              data-quick-rating="5"
+              class="rating-scale-card group text-left rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border border-amber-400/35 hover:border-amber-300 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/15 cursor-pointer"
+            >
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-lg bg-amber-400 text-black text-xs font-extrabold tracking-wide">5★</span>
+                <span class="text-amber-300 text-xs tracking-tighter">★★★★★</span>
+              </div>
+              <p class="text-xs text-gray-100 leading-snug font-medium">
+                Call in sick, ignore your responsibilities, and watch this immediately.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              data-quick-rating="4"
+              class="rating-scale-card group text-left rounded-2xl bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-transparent border border-emerald-400/35 hover:border-emerald-300 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/15 cursor-pointer"
+            >
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-lg bg-emerald-400 text-black text-xs font-extrabold tracking-wide">4★</span>
+                <span class="text-emerald-300 text-xs tracking-tighter">★★★★☆</span>
+              </div>
+              <p class="text-xs text-gray-100 leading-snug font-medium">
+                Add this to your bucket list—right above "skydiving" and below "clearing your browser history."
+              </p>
+            </button>
+
+            <button
+              type="button"
+              data-quick-rating="3"
+              class="rating-scale-card group text-left rounded-2xl bg-gradient-to-br from-sky-500/20 via-sky-500/10 to-transparent border border-sky-400/35 hover:border-sky-300 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky-500/15 cursor-pointer"
+            >
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-lg bg-sky-400 text-black text-xs font-extrabold tracking-wide">3★</span>
+                <span class="text-sky-300 text-xs tracking-tighter">★★★☆☆</span>
+              </div>
+              <p class="text-xs text-gray-100 leading-snug font-medium">
+                Watch when you're folding laundry or waiting for paint to dry.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              data-quick-rating="2"
+              class="rating-scale-card group text-left rounded-2xl bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-transparent border border-orange-400/35 hover:border-orange-300 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/15 cursor-pointer"
+            >
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-lg bg-orange-400 text-black text-xs font-extrabold tracking-wide">2★</span>
+                <span class="text-orange-300 text-xs tracking-tighter">★★☆☆☆</span>
+              </div>
+              <p class="text-xs text-gray-100 leading-snug font-medium">
+                You’ve been warned. Don't come crying to me for those two hours back.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              data-quick-rating="1"
+              class="rating-scale-card group text-left rounded-2xl bg-gradient-to-br from-rose-500/20 via-rose-500/10 to-transparent border border-rose-400/35 hover:border-rose-300 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-rose-500/15 cursor-pointer sm:col-span-2 lg:col-span-1"
+            >
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2 py-0.5 rounded-lg bg-rose-400 text-black text-xs font-extrabold tracking-wide">1★</span>
+                <span class="text-rose-300 text-xs tracking-tighter">★☆☆☆☆</span>
+              </div>
+              <p class="text-xs text-gray-100 leading-snug font-medium">
+                Save this for the afterlife when you have eternity to waste
+              </p>
+            </button>
           </div>
         </div>
 
@@ -2022,6 +2101,20 @@
       renderAll();
 
       tryConnectFirebase();
+
+      // Quick-Filter Click on Hero Rating Scale Cards
+      document.querySelectorAll(".rating-scale-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const ratingVal = card.dataset.quickRating;
+          openHeaderSearch(true);
+          document.getElementById("filter-rating").value = ratingVal;
+          applySearchAndFilters();
+          const resultsSection = document.getElementById("filtered-results-section");
+          if (resultsSection && !resultsSection.classList.contains("hidden")) {
+            resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
 
       // Expandable Header Search Controls
       document.getElementById("header-search-toggle").addEventListener("click", () => openHeaderSearch(false));
