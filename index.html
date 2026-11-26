@@ -59,20 +59,20 @@
       background: rgba(245, 158, 11, 0.75);
     }
 
-    /* Strict 5x5 Grid Page (25 blocks per horizontal page) */
-    .grid-5x5-page {
+    /* Strict 3x3 Grid Page (9 blocks per horizontal page) */
+    .grid-3x3-page {
       flex: 0 0 100%;
       width: 100%;
       scroll-snap-align: start;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      grid-template-rows: repeat(5, minmax(0, auto));
-      gap: 0.85rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(0, auto));
+      gap: 1rem;
     }
 
     @media (max-width: 768px) {
-      .grid-5x5-page {
-        gap: 0.45rem;
+      .grid-3x3-page {
+        gap: 0.55rem;
       }
     }
 
@@ -167,8 +167,9 @@
       <div class="flex items-center gap-2 sm:gap-2.5 ml-auto">
         <nav id="header-nav-links" class="hidden lg:flex items-center gap-1 text-xs font-medium text-gray-300 mr-1">
           <a href="#section-theatres" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Theatres</a>
-          <a href="#section-ott" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">OTT 5×5</a>
-          <a href="#section-downloaded" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Downloaded 5×5</a>
+          <a href="#section-ott" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">OTT</a>
+          <a href="#section-downloaded" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Downloaded</a>
+          <a href="#section-bucket-list" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Bucket List</a>
         </nav>
 
         <!-- Expandable Header Search Control -->
@@ -272,6 +273,27 @@
               <span>Remove Review</span>
             </button>
             <div class="border-t border-white/10 mt-1 pt-1">
+              <div class="px-3.5 py-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                Tracking Tables (Protected)
+              </div>
+              <button
+                type="button"
+                data-admin-action="view-suggestions-log"
+                class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:text-amber-300 hover:bg-white/5 flex items-center justify-between transition cursor-pointer"
+              >
+                <span>📋 Suggestions Log Table</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-gray-300">🔒</span>
+              </button>
+              <button
+                type="button"
+                data-admin-action="view-theatre-log"
+                class="w-full text-left px-4 py-2 text-xs text-gray-200 hover:text-amber-300 hover:bg-white/5 flex items-center justify-between transition cursor-pointer"
+              >
+                <span>🎬 Theatre History Table</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-gray-300">🔒</span>
+              </button>
+            </div>
+            <div class="border-t border-white/10 mt-1 pt-1">
               <button
                 type="button"
                 data-admin-action="restore"
@@ -323,6 +345,7 @@
               <option value="Theatres">Theatres</option>
               <option value="OTT">OTT</option>
               <option value="Downloaded">Downloaded</option>
+              <option value="BucketList">Bucket List</option>
             </select>
           </div>
 
@@ -512,6 +535,13 @@
           >
             Search &amp; Filter
           </button>
+          <button
+            id="hero-suggest-trigger"
+            type="button"
+            class="px-5 py-2.5 rounded-xl bg-purple-500/25 hover:bg-purple-500/40 border border-purple-400/40 text-purple-200 hover:text-white font-semibold text-sm transition shadow-lg shadow-purple-500/10 cursor-pointer"
+          >
+            + Suggest a Movie
+          </button>
         </div>
       </div>
     </div>
@@ -564,22 +594,22 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- TIER 2: OTT RELEASES (5x5 GRID PER HORIZONTAL PAGE)                 -->
+    <!-- TIER 2: OTT RELEASES (3x3 GRID PER HORIZONTAL SLIDE + DOTS)         -->
     <!-- =================================================================== -->
     <section id="section-ott" class="scroll-mt-20">
       <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
         <div>
           <span class="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">Streaming Vault</span>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">OTT Releases <span class="text-sm font-sans font-normal text-gray-400">(5×5 Grid)</span></h2>
-          <p class="text-xs sm:text-sm text-gray-400 mt-1">25 movies &amp; web-series per page — scroll horizontally to reveal the next 5×5 block.</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">OTT Releases</h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">Scroll horizontally or use the slide dots below to browse streaming reviews.</p>
         </div>
 
         <div class="flex items-center gap-2">
-          <span id="ott-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">Page 1 of 1</span>
+          <span id="ott-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">1 / 1</span>
           <button
             id="ott-prev-btn"
             type="button"
-            aria-label="Previous OTT 5x5 Page"
+            aria-label="Previous OTT Slide"
             class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
           >
             ←
@@ -587,7 +617,7 @@
           <button
             id="ott-next-btn"
             type="button"
-            aria-label="Next OTT 5x5 Page"
+            aria-label="Next OTT Slide"
             class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
           >
             →
@@ -595,29 +625,32 @@
         </div>
       </div>
 
-      <!-- Horizontal 5x5 Grid Track -->
+      <!-- Horizontal 3x3 Grid Track -->
       <div id="ott-track" class="horizontal-snap-track pb-3">
-        <!-- 5x5 Grid Pages injected dynamically -->
+        <!-- 3x3 Grid Pages injected dynamically -->
       </div>
+
+      <!-- Slide Pagination Dots -->
+      <div id="ott-dots" class="flex items-center justify-center gap-2 mt-4 flex-wrap"></div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- TIER 3: DOWNLOAD & WATCH (5x5 GRID PER HORIZONTAL PAGE)             -->
+    <!-- TIER 3: DOWNLOAD & WATCH (3x3 GRID PER HORIZONTAL SLIDE + DOTS)     -->
     <!-- =================================================================== -->
-    <section id="section-downloaded" class="scroll-mt-20 pb-8">
+    <section id="section-downloaded" class="scroll-mt-20">
       <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
         <div>
           <span class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">Offline Collection</span>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Download &amp; Watch <span class="text-sm font-sans font-normal text-gray-400">(5×5 Grid)</span></h2>
-          <p class="text-xs sm:text-sm text-gray-400 mt-1">25 downloaded titles per page — scroll horizontally to browse the next 5×5 collection.</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Download &amp; Watch</h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">Scroll horizontally or use the slide dots below to browse downloaded titles.</p>
         </div>
 
         <div class="flex items-center gap-2">
-          <span id="downloaded-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">Page 1 of 1</span>
+          <span id="downloaded-page-indicator" class="text-xs font-semibold text-gray-300 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">1 / 1</span>
           <button
             id="downloaded-prev-btn"
             type="button"
-            aria-label="Previous Downloaded 5x5 Page"
+            aria-label="Previous Downloaded Slide"
             class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
           >
             ←
@@ -625,7 +658,7 @@
           <button
             id="downloaded-next-btn"
             type="button"
-            aria-label="Next Downloaded 5x5 Page"
+            aria-label="Next Downloaded Slide"
             class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white hover:text-amber-300 cursor-pointer"
           >
             →
@@ -633,9 +666,37 @@
         </div>
       </div>
 
-      <!-- Horizontal 5x5 Grid Track -->
+      <!-- Horizontal 3x3 Grid Track -->
       <div id="downloaded-track" class="horizontal-snap-track pb-3">
-        <!-- 5x5 Grid Pages injected dynamically -->
+        <!-- 3x3 Grid Pages injected dynamically -->
+      </div>
+
+      <!-- Slide Pagination Dots -->
+      <div id="downloaded-dots" class="flex items-center justify-center gap-2 mt-4 flex-wrap"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TIER 4: BUCKET LIST / SUGGESTED MOVIES TO WATCH SOON                -->
+    <!-- =================================================================== -->
+    <section id="section-bucket-list" class="scroll-mt-20 pb-8">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-5">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-purple-400">Audience Recommendations</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Bucket List &amp; Suggested Movies</h2>
+          <p class="text-xs sm:text-sm text-gray-400 mt-1">Movies &amp; series suggested by visitors — waiting to be watched and reviewed.</p>
+        </div>
+
+        <button
+          id="bucket-suggest-btn"
+          type="button"
+          class="px-4 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-400/40 text-purple-200 hover:text-white text-xs font-bold transition cursor-pointer"
+        >
+          + Suggest a Movie to Mahesh
+        </button>
+      </div>
+
+      <div id="bucket-list-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <!-- Suggested / Bucket list cards injected dynamically -->
       </div>
     </section>
 
@@ -905,10 +966,10 @@
           </div>
         </div>
 
-        <!-- Where to Watch (Theatres / OTT / Downloaded) -->
+        <!-- Where to Watch (Theatres / OTT / Downloaded / Bucket List) -->
         <div>
           <label class="block text-xs font-medium text-gray-300 mb-1.5">Where to Watch *</label>
-          <div class="grid grid-cols-3 gap-2.5">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-amber-400/50 text-xs font-medium">
               <input type="radio" name="whereToWatch" value="Theatres" checked class="accent-amber-500" />
               <span>Theatres</span>
@@ -920,6 +981,10 @@
             <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-amber-400/50 text-xs font-medium">
               <input type="radio" name="whereToWatch" value="Downloaded" class="accent-amber-500" />
               <span>Downloaded</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/15 cursor-pointer hover:border-purple-400/50 text-xs font-medium">
+              <input type="radio" name="whereToWatch" value="BucketList" class="accent-purple-500" />
+              <span>Bucket List</span>
             </label>
           </div>
 
@@ -1014,6 +1079,142 @@
   </div>
 
   <!-- ===================================================================== -->
+  <!-- MODAL 7: SUGGEST A MOVIE TO MAHESH FORM                               -->
+  <!-- ===================================================================== -->
+  <div id="suggest-movie-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 border border-purple-400/30 animate-modal-in relative">
+      <button
+        id="close-suggest-modal"
+        type="button"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 flex items-center justify-center cursor-pointer"
+      >
+        ✕
+      </button>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300 text-xs font-semibold mb-3">
+        <span>🎬 Audience Recommendation</span>
+      </div>
+      <h3 class="text-2xl font-bold text-white">Suggest a Movie to Mahesh</h3>
+      <p class="text-xs text-gray-400 mt-1">Recommend a movie or web-series you think I should watch next. It will be added straight to my Bucket List!</p>
+
+      <div id="suggest-duplicate-warning" class="hidden mt-4 p-3.5 rounded-2xl bg-amber-500/20 border border-amber-400/50 text-xs text-amber-200 flex items-start gap-2.5">
+        <span class="text-base leading-none">⚠️</span>
+        <div>
+          <strong class="font-bold block text-amber-300">Already in My List or Bucket List!</strong>
+          <span>This movie/series is already reviewed or waiting in my Bucket List.</span>
+        </div>
+      </div>
+
+      <form id="suggest-movie-form" class="mt-5 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Movie Name -->
+          <div>
+            <label for="suggest-name" class="block text-xs font-medium text-gray-300 mb-1">Movie / Web-Series Name *</label>
+            <input id="suggest-name" type="text" required placeholder="e.g., Dune: Prophecy" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+
+          <!-- Language -->
+          <div>
+            <label for="suggest-language" class="block text-xs font-medium text-gray-300 mb-1">Language *</label>
+            <input id="suggest-language" type="text" required placeholder="e.g., Telugu, English, Hindi" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+
+          <!-- Release Year -->
+          <div>
+            <label for="suggest-year" class="block text-xs font-medium text-gray-300 mb-1">Release Year *</label>
+            <input id="suggest-year" type="number" min="1920" max="2035" required placeholder="2025" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+
+          <!-- Genre -->
+          <div>
+            <label for="suggest-genre" class="block text-xs font-medium text-gray-300 mb-1">Genre *</label>
+            <input id="suggest-genre" type="text" required placeholder="e.g., Thriller / Sci-Fi" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+        </div>
+
+        <!-- Suggestor's Rating (1 - 5) -->
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1.5">Your Rating (1 to 5 Stars) *</label>
+          <input type="hidden" id="suggest-rating" value="5" />
+          <div id="suggest-star-picker" class="flex items-center gap-2">
+            <button type="button" data-val="1" class="suggest-star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="2" class="suggest-star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="3" class="suggest-star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="4" class="suggest-star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <button type="button" data-val="5" class="suggest-star-btn text-2xl text-amber-400 hover:scale-110 transition cursor-pointer">★</button>
+            <span id="suggest-rating-label" class="ml-2 text-xs font-semibold text-amber-300">5 / 5</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Suggestor's Name -->
+          <div>
+            <label for="suggest-person-name" class="block text-xs font-medium text-gray-300 mb-1">Your Name *</label>
+            <input id="suggest-person-name" type="text" required placeholder="e.g., Kiran Kumar" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+
+          <!-- Suggestor's Contact -->
+          <div>
+            <label for="suggest-person-contact" class="block text-xs font-medium text-gray-300 mb-1">Your Contact (Phone / Email / Insta) *</label>
+            <input id="suggest-person-contact" type="text" required placeholder="e.g., @kiran or 98765xxxxx" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/15 text-sm text-white focus:outline-none focus:border-purple-400" />
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-3">
+          <button type="button" id="cancel-suggest-btn" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-sm text-gray-300 font-medium cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" id="submit-suggest-btn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-amber-500 hover:from-purple-400 hover:to-amber-400 text-black font-bold text-sm shadow-lg shadow-purple-500/20 transition cursor-pointer">
+            Submit Suggestion
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 8: PROTECTED TRACKING TABLES (SUGGESTIONS LOG & THEATRE LOG)    -->
+  <!-- ===================================================================== -->
+  <div id="tracking-table-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="glass-panel rounded-3xl max-w-4xl w-full max-h-[88vh] flex flex-col border border-white/15 animate-modal-in relative">
+      <div class="p-6 pb-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span id="tracking-table-badge" class="text-[10px] uppercase tracking-widest font-bold text-amber-400 block">Admin Ledger</span>
+          <h3 id="tracking-table-title" class="text-xl sm:text-2xl font-bold text-white">Tracking Table</h3>
+          <p id="tracking-table-subtitle" class="text-xs text-gray-400 mt-0.5">Historical records stored separately.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="switch-to-suggestions-tab"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer"
+          >
+            Suggestions Log
+          </button>
+          <button
+            type="button"
+            id="switch-to-theatre-tab"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer"
+          >
+            Theatre History
+          </button>
+          <button
+            id="close-tracking-modal"
+            type="button"
+            class="w-9 h-9 rounded-full bg-white/10 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center transition cursor-pointer ml-1"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div id="tracking-table-body" class="p-6 overflow-auto flex-1">
+        <!-- Populated dynamically with either Suggestions Table or Theatre History Table -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
   <!-- TOAST NOTIFICATION BANNER                                             -->
   <!-- ===================================================================== -->
   <div id="toast-banner" class="hidden fixed bottom-5 right-5 z-50 glass-panel border border-amber-400/40 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm text-white">
@@ -1055,6 +1256,8 @@
     };
 
     const LOCAL_STORAGE_KEY = "mahesh_movie_world_reviews_v3";
+    const SUGGESTIONS_LOG_KEY = "mahesh_movie_world_suggestions_log_v1";
+    const THEATRE_LOG_KEY = "mahesh_movie_world_theatre_log_v1";
 
     /**
      * =========================================================================
@@ -1400,6 +1603,8 @@
     let firestoreApi = null;
     let firestoreDb = null;
     let firestoreColRef = null;
+    let suggestionsColRef = null;
+    let theatreLogColRef = null;
     let isCloudConnected = false;
 
     function hasValidFirebaseConfig() {
@@ -1451,6 +1656,8 @@
         const app = appMod.initializeApp(CLOUD_CONFIG.firebaseConfig);
         firestoreDb = fsMod.getFirestore(app);
         firestoreColRef = fsMod.collection(firestoreDb, CLOUD_CONFIG.firestoreCollection || "movies");
+        suggestionsColRef = fsMod.collection(firestoreDb, "suggestions_log");
+        theatreLogColRef = fsMod.collection(firestoreDb, "theatre_history_log");
         firestoreApi = fsMod;
 
         const initialSnap = await fsMod.getDocs(firestoreColRef);
@@ -1474,6 +1681,26 @@
           (err) => {
             console.warn("Firestore listener error, staying on local data:", err);
           }
+        );
+
+        const sq = fsMod.query(suggestionsColRef, fsMod.orderBy("suggestedAt", "desc"));
+        fsMod.onSnapshot(
+          sq,
+          (snapshot) => {
+            suggestionsLog = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+            saveSuggestionsLog();
+          },
+          () => {}
+        );
+
+        const tq = fsMod.query(theatreLogColRef, fsMod.orderBy("addedAt", "desc"));
+        fsMod.onSnapshot(
+          tq,
+          (snapshot) => {
+            theatreHistoryLog = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+            saveTheatreLog();
+          },
+          () => {}
         );
 
         isCloudConnected = true;
@@ -1526,6 +1753,8 @@
      * =========================================================================
      */
     let movies = [];
+    let suggestionsLog = [];
+    let theatreHistoryLog = [];
     let pendingAdminAction = null;
     let pendingDeleteId = null;
     let activeDetailMovieId = null;
@@ -1546,6 +1775,107 @@
       }
     }
 
+    function formatDisplayDate(ts) {
+      try {
+        return new Date(ts || Date.now()).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        });
+      } catch (e) {
+        return new Date().toISOString().slice(0, 10);
+      }
+    }
+
+    function loadTrackingLogs() {
+      try {
+        const rawSug = localStorage.getItem(SUGGESTIONS_LOG_KEY);
+        if (rawSug) {
+          const parsedSug = JSON.parse(rawSug);
+          if (Array.isArray(parsedSug)) suggestionsLog = parsedSug;
+        }
+      } catch (e) {}
+
+      try {
+        const rawTh = localStorage.getItem(THEATRE_LOG_KEY);
+        if (rawTh) {
+          const parsedTh = JSON.parse(rawTh);
+          if (Array.isArray(parsedTh) && parsedTh.length > 0) {
+            theatreHistoryLog = parsedTh;
+            return;
+          }
+        }
+      } catch (e) {}
+
+      const initialTheatres = movies.filter((m) => m.whereToWatch === "Theatres");
+      if (initialTheatres.length > 0 && theatreHistoryLog.length === 0) {
+        theatreHistoryLog = initialTheatres.map((m) => ({
+          id: "thlog-" + m.id,
+          movieId: m.id,
+          movieName: m.name,
+          language: m.language,
+          year: m.year,
+          genre: m.genre,
+          rating: m.rating,
+          addedAt: m.addedAt || Date.now(),
+          dateAdded: formatDisplayDate(m.addedAt || Date.now()),
+          currentStatus: "In Theatres"
+        }));
+        saveTheatreLog();
+      }
+    }
+
+    function saveSuggestionsLog() {
+      try {
+        localStorage.setItem(SUGGESTIONS_LOG_KEY, JSON.stringify(suggestionsLog));
+      } catch (e) {}
+    }
+
+    function saveTheatreLog() {
+      try {
+        localStorage.setItem(THEATRE_LOG_KEY, JSON.stringify(theatreHistoryLog));
+      } catch (e) {}
+    }
+
+    async function recordTheatreEntry(movieRecord) {
+      const entry = {
+        movieId: movieRecord.id || "",
+        movieName: movieRecord.name,
+        language: movieRecord.language,
+        year: movieRecord.year,
+        genre: movieRecord.genre,
+        rating: movieRecord.rating,
+        addedAt: Date.now(),
+        dateAdded: formatDisplayDate(Date.now()),
+        currentStatus: "In Theatres"
+      };
+      if (isCloudConnected && firestoreApi && theatreLogColRef) {
+        await firestoreApi.addDoc(theatreLogColRef, entry);
+      } else {
+        theatreHistoryLog.unshift({ id: "thlog-" + Date.now(), ...entry });
+        saveTheatreLog();
+      }
+    }
+
+    async function markTheatreEntryMoved(movieId, movieName, newCategory) {
+      const idx = theatreHistoryLog.findIndex(
+        (row) => (movieId && row.movieId === movieId) || row.movieName.toLowerCase() === movieName.toLowerCase()
+      );
+      if (idx !== -1) {
+        const updatedStatus = `Moved to ${newCategory} (${formatDisplayDate(Date.now())})`;
+        if (isCloudConnected && firestoreApi && firestoreDb && theatreHistoryLog[idx].id && !theatreHistoryLog[idx].id.startsWith("thlog-")) {
+          try {
+            await firestoreApi.updateDoc(
+              firestoreApi.doc(firestoreDb, "theatre_history_log", theatreHistoryLog[idx].id),
+              { currentStatus: updatedStatus }
+            );
+          } catch (e) {}
+        }
+        theatreHistoryLog[idx].currentStatus = updatedStatus;
+        saveTheatreLog();
+      }
+    }
+
     function loadLocalMovies() {
       try {
         const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1553,6 +1883,7 @@
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
             movies = parsed;
+            loadTrackingLogs();
             return;
           }
         }
@@ -1561,6 +1892,7 @@
       }
       movies = createSeedMovies();
       saveLocalMovies();
+      loadTrackingLogs();
     }
 
     function saveLocalMovies() {
@@ -1775,9 +2107,10 @@
       });
     }
 
-    function render5x5Section(categoryName, trackId, indicatorId) {
+    function render3x3Section(categoryName, trackId, indicatorId, dotsId, dotClassName) {
       const track = document.getElementById(trackId);
       const indicator = document.getElementById(indicatorId);
+      const dotsContainer = document.getElementById(dotsId);
       const list = getSortedMovies(movies.filter((m) => m.whereToWatch === categoryName));
 
       if (list.length === 0) {
@@ -1785,11 +2118,12 @@
           <div class="w-full glass-panel rounded-2xl p-8 text-center text-sm text-gray-400">
             No items found in ${escapeHtml(categoryName)}.
           </div>`;
-        indicator.textContent = "Page 0 of 0";
+        indicator.textContent = "0 / 0";
+        if (dotsContainer) dotsContainer.innerHTML = "";
         return;
       }
 
-      const pageSize = 25;
+      const pageSize = 9;
       const pages = [];
       for (let i = 0; i < list.length; i += pageSize) {
         pages.push(list.slice(i, i + pageSize));
@@ -1798,7 +2132,7 @@
       track.innerHTML = pages
         .map(
           (pageItems) => `
-          <div class="grid-5x5-page">
+          <div class="grid-3x3-page">
             ${pageItems
               .map(
                 (m) => `
@@ -1813,15 +2147,15 @@
                       loading="lazy"
                       class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
-                    <div class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs font-bold border border-white/10">
+                    <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/10">
                       ${m.rating}★
                     </div>
                   </div>
-                  <div class="p-2 sm:p-2.5 flex-1 flex flex-col justify-between">
-                    <h4 class="text-[11px] sm:text-xs font-semibold text-white group-hover:text-amber-300 line-clamp-1">
+                  <div class="p-2.5 sm:p-3 flex-1 flex flex-col justify-between">
+                    <h4 class="text-xs sm:text-sm font-semibold text-white group-hover:text-amber-300 line-clamp-1">
                       ${escapeHtml(m.name)}
                     </h4>
-                    <div class="mt-1 flex items-center justify-between text-[9px] sm:text-[10px] text-gray-400">
+                    <div class="mt-1 flex items-center justify-between text-[10px] sm:text-xs text-gray-400">
                       <span>${m.year}</span>
                       <span class="truncate max-w-[65%]">${escapeHtml(m.watchDetail || m.genre)}</span>
                     </div>
@@ -1835,7 +2169,91 @@
         )
         .join("");
 
-      indicator.textContent = `Page 1 of ${pages.length} (${list.length} titles)`;
+      indicator.textContent = `1 / ${pages.length} (${list.length} titles)`;
+
+      if (dotsContainer) {
+        dotsContainer.innerHTML = pages
+          .map(
+            (_, idx) => `
+            <button
+              type="button"
+              data-page-idx="${idx}"
+              class="${dotClassName} h-2.5 rounded-full transition-all cursor-pointer ${
+                idx === 0 ? "w-7 bg-amber-400" : "w-2.5 bg-white/25 hover:bg-white/50"
+              }"
+              aria-label="Go to slide ${idx + 1}"
+            ></button>
+          `
+          )
+          .join("");
+
+        dotsContainer.querySelectorAll(`.${dotClassName}`).forEach((dot) => {
+          dot.addEventListener("click", () => {
+            const idx = Number(dot.dataset.pageIdx);
+            track.scrollTo({ left: idx * track.clientWidth, behavior: "smooth" });
+          });
+        });
+      }
+    }
+
+    function renderBucketListSection() {
+      const grid = document.getElementById("bucket-list-grid");
+      if (!grid) return;
+
+      const bucketMovies = getSortedMovies(movies.filter((m) => m.whereToWatch === "BucketList"));
+
+      if (bucketMovies.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full glass-panel rounded-2xl p-8 text-center space-y-3">
+            <p class="text-sm text-gray-300">No suggested movies in the Bucket List yet. Have a great recommendation for Mahesh?</p>
+            <button
+              type="button"
+              onclick="openSuggestMovieModal('')"
+              class="px-5 py-2 rounded-xl bg-purple-500/25 hover:bg-purple-500/40 border border-purple-400/40 text-purple-200 text-xs font-bold transition cursor-pointer"
+            >
+              + Suggest a Movie to Mahesh
+            </button>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = bucketMovies
+        .map(
+          (m) => `
+          <article
+            data-movie-id="${escapeHtml(m.id)}"
+            class="movie-card-trigger glass-card rounded-2xl overflow-hidden flex flex-col cursor-pointer group border-purple-400/20"
+          >
+            <div class="relative aspect-[2/3] w-full overflow-hidden bg-black/40">
+              <img
+                src="${escapeHtml(m.poster)}"
+                alt="${escapeHtml(m.name)}"
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              />
+              <div class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/10">
+                ${m.rating}★
+              </div>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-purple-600/85 text-white text-[10px] font-bold">
+                Bucket List
+              </div>
+            </div>
+            <div class="p-3 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-purple-300 line-clamp-1">
+                  ${escapeHtml(m.name)}
+                </h4>
+                <p class="text-[11px] text-gray-400 mt-0.5">${m.year} • ${escapeHtml(m.genre)}</p>
+              </div>
+              <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-purple-300">
+                <span class="truncate">By ${escapeHtml(m.suggestedBy || "Visitor")}</span>
+                <span class="text-amber-300 font-semibold shrink-0">Review →</span>
+              </div>
+            </div>
+          </article>
+        `
+        )
+        .join("");
     }
 
     function populateFilterOptions() {
@@ -1904,7 +2322,34 @@
       statusLabel.textContent = `Found ${matched.length} matching title(s)`;
 
       if (matched.length === 0) {
-        resultsGrid.innerHTML = `<div class="col-span-full text-center py-6 text-sm text-gray-400">No movies or web-series match your search/filter criteria.</div>`;
+        const rawQuery = document.getElementById("search-input").value.trim();
+        resultsGrid.innerHTML = `
+          <div class="col-span-full text-center py-8 px-4 space-y-4">
+            <div class="text-3xl">🎬</div>
+            <p class="text-base sm:text-lg font-semibold text-white">
+              Sorry, I haven't watched it yet!
+            </p>
+            <p class="text-xs sm:text-sm text-gray-300 max-w-md mx-auto">
+              If you want me to watch it, click on <strong class="text-purple-300">"Suggest a Movie to Mahesh"</strong> below.
+            </p>
+            <div>
+              <button
+                type="button"
+                id="empty-search-suggest-btn"
+                data-prefill-name="${escapeHtml(rawQuery)}"
+                class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-amber-500 hover:from-purple-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-lg shadow-purple-500/20 transition cursor-pointer"
+              >
+                + Suggest a Movie to Mahesh
+              </button>
+            </div>
+          </div>`;
+
+        const suggestBtn = document.getElementById("empty-search-suggest-btn");
+        if (suggestBtn) {
+          suggestBtn.addEventListener("click", () => {
+            openSuggestMovieModal(suggestBtn.dataset.prefillName || "");
+          });
+        }
         return;
       }
 
@@ -1938,8 +2383,9 @@
       populateFilterOptions();
       renderHeroCollage();
       renderTheatreCarousel();
-      render5x5Section("OTT", "ott-track", "ott-page-indicator");
-      render5x5Section("Downloaded", "downloaded-track", "downloaded-page-indicator");
+      render3x3Section("OTT", "ott-track", "ott-page-indicator", "ott-dots", "ott-dot");
+      render3x3Section("Downloaded", "downloaded-track", "downloaded-page-indicator", "downloaded-dots", "dl-dot");
+      renderBucketListSection();
       applySearchAndFilters();
     }
 
@@ -1965,6 +2411,8 @@
         watchBadgeHtml = isUrl
           ? `<a href="${escapeHtml(detail)}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 hover:bg-emerald-500/30 text-xs font-semibold underline">Download / Source Link ↗</a>`
           : `<span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">Downloaded: ${escapeHtml(detail || "Offline Copy")}</span>`;
+      } else if (movie.whereToWatch === "BucketList") {
+        watchBadgeHtml = `<span class="px-3 py-1 rounded-full bg-purple-500/25 border border-purple-400/40 text-purple-200 text-xs font-semibold">Bucket List • Suggested by ${escapeHtml(movie.suggestedBy || "Visitor")}</span>`;
       }
 
       const hasMusic = Boolean(movie.bgMusicUrl && String(movie.bgMusicUrl).trim());
@@ -2107,7 +2555,9 @@
         add: "Verify credentials to Add a New Review.",
         edit: "Verify credentials to Edit an Existing Review.",
         remove: "Verify credentials to Remove a Review.",
-        restore: "Verify credentials to Restore the Default Sample Catalog."
+        restore: "Verify credentials to Restore the Default Sample Catalog.",
+        "view-suggestions-log": "Verify credentials to view the Movie Suggestions Log Table.",
+        "view-theatre-log": "Verify credentials to view the Theatre Watchlist History Table."
       };
       document.getElementById("auth-subtitle").textContent = titles[actionType] || "Enter credentials to continue.";
       document.getElementById("auth-modal").classList.remove("hidden");
@@ -2274,6 +2724,145 @@
       document.getElementById("delete-confirm-modal").classList.remove("hidden");
     }
 
+    function setSuggestRating(val) {
+      const num = Math.max(1, Math.min(5, Number(val) || 5));
+      document.getElementById("suggest-rating").value = num;
+      document.getElementById("suggest-rating-label").textContent = `${num} / 5`;
+      document.querySelectorAll("#suggest-star-picker .suggest-star-btn").forEach((btn) => {
+        const starVal = Number(btn.dataset.val);
+        btn.classList.toggle("text-amber-400", starVal <= num);
+        btn.classList.toggle("text-gray-600", starVal > num);
+      });
+    }
+
+    function openSuggestMovieModal(prefillName = "") {
+      const modal = document.getElementById("suggest-movie-modal");
+      document.getElementById("suggest-duplicate-warning").classList.add("hidden");
+      document.getElementById("suggest-movie-form").reset();
+      setSuggestRating(5);
+      if (prefillName) {
+        document.getElementById("suggest-name").value = prefillName;
+      }
+      modal.classList.remove("hidden");
+      setTimeout(() => document.getElementById("suggest-name").focus(), 50);
+    }
+
+    function openTrackingTableModal(tabName = "suggestions") {
+      const modal = document.getElementById("tracking-table-modal");
+      const titleEl = document.getElementById("tracking-table-title");
+      const subEl = document.getElementById("tracking-table-subtitle");
+      const bodyEl = document.getElementById("tracking-table-body");
+      const sugTabBtn = document.getElementById("switch-to-suggestions-tab");
+      const thTabBtn = document.getElementById("switch-to-theatre-tab");
+
+      const activeBtnClass = "px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-black transition cursor-pointer";
+      const inactiveBtnClass = "px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/10 text-gray-300 hover:bg-white/20 transition cursor-pointer";
+
+      if (tabName === "suggestions") {
+        sugTabBtn.className = activeBtnClass;
+        thTabBtn.className = inactiveBtnClass;
+        titleEl.textContent = "Movie Suggestions Log Table";
+        subEl.textContent = "Permanent ledger of who suggested each movie and when (preserved even after moving to OTT/Downloads).";
+
+        if (suggestionsLog.length === 0) {
+          bodyEl.innerHTML = `<div class="text-center py-10 text-sm text-gray-400">No audience movie suggestions recorded yet.</div>`;
+        } else {
+          bodyEl.innerHTML = `
+            <div class="overflow-x-auto rounded-2xl border border-white/10">
+              <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="bg-white/10 text-amber-300 uppercase text-[11px] tracking-wider">
+                    <th class="py-3 px-4">#</th>
+                    <th class="py-3 px-4">Movie / Series</th>
+                    <th class="py-3 px-4">Language</th>
+                    <th class="py-3 px-4">Year</th>
+                    <th class="py-3 px-4">Genre</th>
+                    <th class="py-3 px-4">Rating</th>
+                    <th class="py-3 px-4">Suggested By</th>
+                    <th class="py-3 px-4">Contact</th>
+                    <th class="py-3 px-4">Date Suggested</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10 text-gray-200">
+                  ${suggestionsLog
+                    .map(
+                      (row, i) => `
+                    <tr class="hover:bg-white/5">
+                      <td class="py-2.5 px-4 text-gray-400">${i + 1}</td>
+                      <td class="py-2.5 px-4 font-semibold text-white">${escapeHtml(row.movieName)}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.language || "-")}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.year)}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.genre)}</td>
+                      <td class="py-2.5 px-4 text-amber-300 font-bold">${row.rating}★</td>
+                      <td class="py-2.5 px-4 font-medium text-purple-300">${escapeHtml(row.suggestorName)}</td>
+                      <td class="py-2.5 px-4 text-gray-300">${escapeHtml(row.suggestorContact)}</td>
+                      <td class="py-2.5 px-4 text-gray-400 whitespace-nowrap">${escapeHtml(row.dateSuggested || formatDisplayDate(row.suggestedAt))}</td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>`;
+        }
+      } else {
+        thTabBtn.className = activeBtnClass;
+        sugTabBtn.className = inactiveBtnClass;
+        titleEl.textContent = "Theatre Watchlist History Table";
+        subEl.textContent = "Tracks every movie added to 'Watched in Theatres' with date added and whether it moved to OTT or Downloads.";
+
+        if (theatreHistoryLog.length === 0) {
+          bodyEl.innerHTML = `<div class="text-center py-10 text-sm text-gray-400">No theatre entries recorded yet.</div>`;
+        } else {
+          bodyEl.innerHTML = `
+            <div class="overflow-x-auto rounded-2xl border border-white/10">
+              <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="bg-white/10 text-amber-300 uppercase text-[11px] tracking-wider">
+                    <th class="py-3 px-4">#</th>
+                    <th class="py-3 px-4">Movie Name</th>
+                    <th class="py-3 px-4">Language</th>
+                    <th class="py-3 px-4">Year</th>
+                    <th class="py-3 px-4">Genre</th>
+                    <th class="py-3 px-4">Rating</th>
+                    <th class="py-3 px-4">Date Added</th>
+                    <th class="py-3 px-4">Current Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10 text-gray-200">
+                  ${theatreHistoryLog
+                    .map(
+                      (row, i) => `
+                    <tr class="hover:bg-white/5">
+                      <td class="py-2.5 px-4 text-gray-400">${i + 1}</td>
+                      <td class="py-2.5 px-4 font-semibold text-white">${escapeHtml(row.movieName)}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.language || "-")}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.year)}</td>
+                      <td class="py-2.5 px-4">${escapeHtml(row.genre)}</td>
+                      <td class="py-2.5 px-4 text-amber-300 font-bold">${row.rating}★</td>
+                      <td class="py-2.5 px-4 text-gray-400 whitespace-nowrap">${escapeHtml(row.dateAdded || formatDisplayDate(row.addedAt))}</td>
+                      <td class="py-2.5 px-4">
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
+                          String(row.currentStatus || "").startsWith("Moved")
+                            ? "bg-sky-500/20 text-sky-300 border border-sky-400/30"
+                            : "bg-amber-500/20 text-amber-300 border border-amber-400/30"
+                        }">
+                          ${escapeHtml(row.currentStatus || "In Theatres")}
+                        </span>
+                      </td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>`;
+        }
+      }
+
+      modal.classList.remove("hidden");
+    }
+
     function showToast(message, icon = "✓") {
       const banner = document.getElementById("toast-banner");
       document.getElementById("toast-icon").textContent = icon;
@@ -2399,6 +2988,10 @@
           } else {
             openSelectMovieModal("remove");
           }
+        } else if (pendingAdminAction === "view-suggestions-log") {
+          openTrackingTableModal("suggestions");
+        } else if (pendingAdminAction === "view-theatre-log") {
+          openTrackingTableModal("theatre");
         } else if (pendingAdminAction === "restore") {
           document.getElementById("restore-confirm-modal").classList.remove("hidden");
         }
@@ -2593,6 +3186,8 @@
           }
 
           if (editId) {
+            const prevMovie = movies.find((m) => m.id === editId);
+            const prevCategory = prevMovie ? prevMovie.whereToWatch : "";
             const updatedFields = {
               name,
               language,
@@ -2621,6 +3216,13 @@
                 renderAll();
               }
             }
+
+            if (prevCategory === "Theatres" && whereToWatch !== "Theatres") {
+              await markTheatreEntryMoved(editId, name, whereToWatch);
+            } else if (prevCategory !== "Theatres" && whereToWatch === "Theatres") {
+              await recordTheatreEntry({ id: editId, name, language, year, genre, rating });
+            }
+
             showToast(`Updated "${name}"!`);
           } else {
             const newItem = {
@@ -2639,13 +3241,20 @@
               addedAt: Date.now()
             };
 
+            let createdId = "rev-" + Date.now();
             if (isCloudConnected && firestoreApi && firestoreColRef) {
-              await firestoreApi.addDoc(firestoreColRef, newItem);
+              const docRef = await firestoreApi.addDoc(firestoreColRef, newItem);
+              createdId = docRef.id;
             } else {
-              movies.unshift({ id: "rev-" + Date.now(), ...newItem });
+              movies.unshift({ id: createdId, ...newItem });
               saveLocalMovies();
               renderAll();
             }
+
+            if (whereToWatch === "Theatres") {
+              await recordTheatreEntry({ id: createdId, name, language, year, genre, rating });
+            }
+
             showToast(`Added "${name}" to Mahesh's Movie World!`);
           }
 
@@ -2714,7 +3323,7 @@
         });
       });
 
-      // OTT 5x5 Horizontal Controls
+      // OTT 3x3 Horizontal Controls + Pagination Dots Sync
       const ottTrack = document.getElementById("ott-track");
       document.getElementById("ott-prev-btn").addEventListener("click", () => {
         ottTrack.scrollBy({ left: -ottTrack.clientWidth, behavior: "smooth" });
@@ -2723,14 +3332,19 @@
         ottTrack.scrollBy({ left: ottTrack.clientWidth, behavior: "smooth" });
       });
       ottTrack.addEventListener("scroll", () => {
-        const pages = ottTrack.querySelectorAll(".grid-5x5-page");
+        const pages = ottTrack.querySelectorAll(".grid-3x3-page");
         if (!pages.length || !ottTrack.clientWidth) return;
-        const pageIdx = Math.round(ottTrack.scrollLeft / ottTrack.clientWidth) + 1;
+        const activeIdx = Math.min(Math.round(ottTrack.scrollLeft / ottTrack.clientWidth), pages.length - 1);
         const totalOtt = movies.filter((m) => m.whereToWatch === "OTT").length;
-        document.getElementById("ott-page-indicator").textContent = `Page ${Math.min(pageIdx, pages.length)} of ${pages.length} (${totalOtt} titles)`;
+        document.getElementById("ott-page-indicator").textContent = `${activeIdx + 1} / ${pages.length} (${totalOtt} titles)`;
+        document.querySelectorAll("#ott-dots .ott-dot").forEach((dot, idx) => {
+          dot.className = `ott-dot h-2.5 rounded-full transition-all cursor-pointer ${
+            idx === activeIdx ? "w-7 bg-amber-400" : "w-2.5 bg-white/25 hover:bg-white/50"
+          }`;
+        });
       });
 
-      // Downloaded 5x5 Horizontal Controls
+      // Downloaded 3x3 Horizontal Controls + Pagination Dots Sync
       const dlTrack = document.getElementById("downloaded-track");
       document.getElementById("downloaded-prev-btn").addEventListener("click", () => {
         dlTrack.scrollBy({ left: -dlTrack.clientWidth, behavior: "smooth" });
@@ -2739,11 +3353,140 @@
         dlTrack.scrollBy({ left: dlTrack.clientWidth, behavior: "smooth" });
       });
       dlTrack.addEventListener("scroll", () => {
-        const pages = dlTrack.querySelectorAll(".grid-5x5-page");
+        const pages = dlTrack.querySelectorAll(".grid-3x3-page");
         if (!pages.length || !dlTrack.clientWidth) return;
-        const pageIdx = Math.round(dlTrack.scrollLeft / dlTrack.clientWidth) + 1;
+        const activeIdx = Math.min(Math.round(dlTrack.scrollLeft / dlTrack.clientWidth), pages.length - 1);
         const totalDl = movies.filter((m) => m.whereToWatch === "Downloaded").length;
-        document.getElementById("downloaded-page-indicator").textContent = `Page ${Math.min(pageIdx, pages.length)} of ${pages.length} (${totalDl} titles)`;
+        document.getElementById("downloaded-page-indicator").textContent = `${activeIdx + 1} / ${pages.length} (${totalDl} titles)`;
+        document.querySelectorAll("#downloaded-dots .dl-dot").forEach((dot, idx) => {
+          dot.className = `dl-dot h-2.5 rounded-full transition-all cursor-pointer ${
+            idx === activeIdx ? "w-7 bg-amber-400" : "w-2.5 bg-white/25 hover:bg-white/50"
+          }`;
+        });
+      });
+
+      // Suggest a Movie Triggers (Hero + Bucket List Header)
+      document.getElementById("hero-suggest-trigger").addEventListener("click", () => {
+        openSuggestMovieModal("");
+      });
+      document.getElementById("bucket-suggest-btn").addEventListener("click", () => {
+        openSuggestMovieModal("");
+      });
+
+      // Suggest Movie Star Rating Picker
+      document.querySelectorAll("#suggest-star-picker .suggest-star-btn").forEach((btn) => {
+        btn.addEventListener("click", () => setSuggestRating(btn.dataset.val));
+      });
+
+      document.getElementById("suggest-name").addEventListener("input", () => {
+        document.getElementById("suggest-duplicate-warning").classList.add("hidden");
+      });
+
+      // Suggest Movie Form Submit
+      document.getElementById("suggest-movie-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("suggest-name").value.trim();
+        const language = document.getElementById("suggest-language").value.trim();
+        const year = Number(document.getElementById("suggest-year").value);
+        const genre = document.getElementById("suggest-genre").value.trim();
+        const rating = Number(document.getElementById("suggest-rating").value);
+        const suggestorName = document.getElementById("suggest-person-name").value.trim();
+        const suggestorContact = document.getElementById("suggest-person-contact").value.trim();
+
+        const isDuplicate = movies.some(
+          (m) => m.name.trim().toLowerCase() === name.toLowerCase()
+        );
+        if (isDuplicate) {
+          document.getElementById("suggest-duplicate-warning").classList.remove("hidden");
+          return;
+        }
+
+        const submitBtn = document.getElementById("submit-suggest-btn");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        try {
+          const nowTs = Date.now();
+          const dateStr = formatDisplayDate(nowTs);
+
+          // 1. Add to Bucket List in main movies list
+          const bucketMovie = {
+            name,
+            language,
+            year,
+            genre,
+            rating,
+            whereToWatch: "BucketList",
+            watchDetail: `Suggested by ${suggestorName}`,
+            suggestedBy: suggestorName,
+            suggestedContact: suggestorContact,
+            suggestedDate: dateStr,
+            pros: `Suggested by ${suggestorName} (${rating}/5 stars) — queued in Bucket List to watch soon.`,
+            cons: "Not watched & reviewed by Mahesh yet.",
+            audience: `Recommended by ${suggestorName} for ${genre} fans.`,
+            poster: generateCinematicPoster(name, genre, year, movies.length + 1),
+            addedAt: nowTs
+          };
+
+          // 2. Append permanent record to separate Suggestions Log Table
+          const logEntry = {
+            movieName: name,
+            language,
+            year,
+            genre,
+            rating,
+            suggestorName,
+            suggestorContact,
+            suggestedAt: nowTs,
+            dateSuggested: dateStr
+          };
+
+          if (isCloudConnected && firestoreApi && firestoreColRef) {
+            await firestoreApi.addDoc(firestoreColRef, bucketMovie);
+            if (suggestionsColRef) {
+              await firestoreApi.addDoc(suggestionsColRef, logEntry);
+            }
+          } else {
+            movies.unshift({ id: "bucket-" + nowTs, ...bucketMovie });
+            saveLocalMovies();
+            suggestionsLog.unshift({ id: "suglog-" + nowTs, ...logEntry });
+            saveSuggestionsLog();
+            renderAll();
+          }
+
+          document.getElementById("suggest-movie-modal").classList.add("hidden");
+          resetAllSearchAndFilters();
+          closeHeaderSearch();
+          showToast("Thanks for the suggestion! It will be added to my bucket list and will be watched soon.", "🎬");
+
+          const bucketSection = document.getElementById("section-bucket-list");
+          if (bucketSection) {
+            bucketSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        } catch (err) {
+          console.error("Suggestion save failed:", err);
+          showToast("Could not submit suggestion. Please try again.", "!");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Suggestion";
+        }
+      });
+
+      // Suggest Modal & Tracking Table Modal Close / Tab Switch Controls
+      document.getElementById("close-suggest-modal").addEventListener("click", () => {
+        document.getElementById("suggest-movie-modal").classList.add("hidden");
+      });
+      document.getElementById("cancel-suggest-btn").addEventListener("click", () => {
+        document.getElementById("suggest-movie-modal").classList.add("hidden");
+      });
+      document.getElementById("close-tracking-modal").addEventListener("click", () => {
+        document.getElementById("tracking-table-modal").classList.add("hidden");
+      });
+      document.getElementById("switch-to-suggestions-tab").addEventListener("click", () => {
+        openTrackingTableModal("suggestions");
+      });
+      document.getElementById("switch-to-theatre-tab").addEventListener("click", () => {
+        openTrackingTableModal("theatre");
       });
 
       // Expanded Review Modal Top-Corner Edit & Delete Buttons (with Credential Verification)
