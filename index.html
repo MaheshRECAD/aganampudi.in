@@ -846,6 +846,35 @@
           </div>
         </div>
 
+        <!-- Background Music / Theme Song (Optional) -->
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Background Music / Theme Song (Optional — Upload Audio or Paste Direct MP3 URL)</label>
+          <div class="rounded-2xl bg-white/5 border border-white/10 p-3 space-y-2">
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input
+                id="field-music-file"
+                type="file"
+                accept="audio/*"
+                class="block w-full text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500/20 file:text-amber-300 hover:file:bg-amber-500/30 cursor-pointer"
+              />
+              <button
+                type="button"
+                id="clear-music-btn"
+                class="hidden px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs font-semibold shrink-0 cursor-pointer"
+              >
+                Remove Track
+              </button>
+            </div>
+            <input
+              id="field-music-url"
+              type="url"
+              placeholder="Or paste direct audio URL (https://.../theme.mp3)"
+              class="w-full px-3 py-2 rounded-xl bg-black/30 border border-white/15 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-400"
+            />
+            <div id="music-upload-status" class="hidden text-[11px] text-amber-300 font-medium"></div>
+          </div>
+        </div>
+
         <!-- Where to Watch (Theatres / OTT / Downloaded) -->
         <div>
           <label class="block text-xs font-medium text-gray-300 mb-1.5">Where to Watch *</label>
@@ -1444,6 +1473,23 @@
       return json.secure_url;
     }
 
+    async function uploadAudioToCloudinary(file, statusCallback) {
+      const { cloudName, uploadPreset } = CLOUD_CONFIG.cloudinaryConfig;
+      // Cloudinary handles audio uploads via the "video" resource endpoint
+      const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/video/upload`;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      if (statusCallback) statusCallback("Uploading theme audio to Cloudinary...");
+      const res = await fetch(url, { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`Cloudinary Audio HTTP ${res.status}`);
+      const json = await res.json();
+      if (!json.secure_url) throw new Error("Missing secure_url from Cloudinary");
+      if (statusCallback) statusCallback("Theme audio uploaded to Cloudinary!");
+      return json.secure_url;
+    }
+
     /**
      * =========================================================================
      * 6. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
@@ -1454,6 +1500,19 @@
     let pendingDeleteId = null;
     let selectedPosterFile = null;
     let selectedPosterDataUrl = "";
+    let selectedMusicFile = null;
+    let selectedMusicDataUrl = "";
+    let activeReviewAudio = null;
+
+    function stopReviewAudio() {
+      if (activeReviewAudio) {
+        try {
+          activeReviewAudio.pause();
+          activeReviewAudio.currentTime = 0;
+        } catch (e) {}
+        activeReviewAudio = null;
+      }
+    }
 
     function loadLocalMovies() {
       try {
@@ -1858,6 +1917,7 @@
      * =========================================================================
      */
     function openDetailModal(movieId) {
+      stopReviewAudio();
       const movie = movies.find((m) => m.id === movieId);
       if (!movie) return;
 
@@ -1873,6 +1933,37 @@
           ? `<a href="${escapeHtml(detail)}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 hover:bg-emerald-500/30 text-xs font-semibold underline">Download / Source Link ↗</a>`
           : `<span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">Downloaded: ${escapeHtml(detail || "Offline Copy")}</span>`;
       }
+
+      const hasMusic = Boolean(movie.bgMusicUrl && String(movie.bgMusicUrl).trim());
+      const musicPlayerHtml = hasMusic
+        ? `
+          <div id="modal-music-bar" class="rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/10 to-transparent border border-amber-400/30 px-4 py-2.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span id="modal-music-pulse" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+              <div class="truncate">
+                <span class="text-[10px] uppercase tracking-wider font-bold text-amber-300 block">Theme Soundtrack</span>
+                <span id="modal-music-status" class="text-xs text-gray-200 truncate block">Playing theme for ${escapeHtml(movie.name)}...</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                id="modal-music-toggle-btn"
+                class="px-3 py-1 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold transition cursor-pointer"
+              >
+                Pause ❚❚
+              </button>
+              <button
+                type="button"
+                id="modal-music-mute-btn"
+                class="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold transition cursor-pointer"
+              >
+                🔊
+              </button>
+            </div>
+          </div>
+        `
+        : "";
 
       body.innerHTML = `
         <div class="flex flex-col sm:flex-row gap-6">
@@ -1894,6 +1985,8 @@
               </p>
             </div>
 
+            ${musicPlayerHtml}
+
             <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/25 p-4">
               <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300 mb-1">✓ Pros (What Worked)</h4>
               <p class="text-sm text-gray-100 leading-relaxed">${escapeHtml(movie.pros)}</p>
@@ -1913,6 +2006,57 @@
       `;
 
       document.getElementById("detail-modal").classList.remove("hidden");
+
+      if (hasMusic) {
+        const audio = new Audio(movie.bgMusicUrl);
+        audio.loop = true;
+        audio.volume = 0.45;
+        activeReviewAudio = audio;
+
+        const toggleBtn = document.getElementById("modal-music-toggle-btn");
+        const muteBtn = document.getElementById("modal-music-mute-btn");
+        const statusText = document.getElementById("modal-music-status");
+        const pulseDot = document.getElementById("modal-music-pulse");
+
+        const syncAudioUI = () => {
+          if (!toggleBtn) return;
+          if (audio.paused) {
+            toggleBtn.textContent = "Play ▶";
+            statusText.textContent = "Paused";
+            pulseDot.classList.remove("animate-ping");
+          } else {
+            toggleBtn.textContent = "Pause ❚❚";
+            statusText.textContent = `Playing theme for ${movie.name}`;
+            pulseDot.classList.add("animate-ping");
+          }
+          muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+        };
+
+        toggleBtn.addEventListener("click", () => {
+          if (audio.paused) {
+            audio.play().then(syncAudioUI).catch(() => {});
+          } else {
+            audio.pause();
+            syncAudioUI();
+          }
+        });
+
+        muteBtn.addEventListener("click", () => {
+          audio.muted = !audio.muted;
+          syncAudioUI();
+        });
+
+        audio
+          .play()
+          .then(syncAudioUI)
+          .catch(() => {
+            if (toggleBtn) {
+              toggleBtn.textContent = "Play ▶";
+              statusText.textContent = "Tap Play to start theme music";
+              pulseDot.classList.remove("animate-ping");
+            }
+          });
+      }
     }
 
     /**
@@ -2030,12 +2174,20 @@
       const warningEl = document.getElementById("duplicate-warning");
       const uploadStatusEl = document.getElementById("poster-upload-status");
 
+      const musicStatusEl = document.getElementById("music-upload-status");
+      const clearMusicBtn = document.getElementById("clear-music-btn");
       warningEl.classList.add("hidden");
       uploadStatusEl.classList.add("hidden");
+      musicStatusEl.classList.add("hidden");
+      clearMusicBtn.classList.add("hidden");
       selectedPosterFile = null;
       selectedPosterDataUrl = "";
+      selectedMusicFile = null;
+      selectedMusicDataUrl = "";
       document.getElementById("field-poster-file").value = "";
       document.getElementById("field-poster-url").value = "";
+      document.getElementById("field-music-file").value = "";
+      document.getElementById("field-music-url").value = "";
 
       if (editId) {
         const existing = movies.find((m) => m.id === editId);
@@ -2054,6 +2206,15 @@
           document.getElementById("field-poster-url").value = existing.poster;
         }
         selectedPosterDataUrl = existing.poster;
+        if (existing.bgMusicUrl) {
+          selectedMusicDataUrl = existing.bgMusicUrl;
+          if (/^https?:\/\//i.test(existing.bgMusicUrl)) {
+            document.getElementById("field-music-url").value = existing.bgMusicUrl;
+          }
+          musicStatusEl.classList.remove("hidden");
+          musicStatusEl.textContent = "Theme audio attached to this review.";
+          clearMusicBtn.classList.remove("hidden");
+        }
         setFormRating(existing.rating);
 
         const radio = document.querySelector(`input[name="whereToWatch"][value="${existing.whereToWatch}"]`);
@@ -2274,6 +2435,45 @@
         }
       });
 
+      // Background Music File Input
+      document.getElementById("field-music-file").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        const statusEl = document.getElementById("music-upload-status");
+        const clearBtn = document.getElementById("clear-music-btn");
+        if (!file) {
+          selectedMusicFile = null;
+          return;
+        }
+        selectedMusicFile = file;
+        clearBtn.classList.remove("hidden");
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          selectedMusicDataUrl = ev.target.result;
+          statusEl.classList.remove("hidden");
+          statusEl.textContent = hasValidCloudinaryConfig()
+            ? `Selected "${file.name}" — will upload to Cloudinary on save.`
+            : `Selected "${file.name}" (Saved locally; keep audio clips compact or use direct MP3 URL).`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById("field-music-url").addEventListener("input", (e) => {
+        const val = e.target.value.trim();
+        const clearBtn = document.getElementById("clear-music-btn");
+        if (val) {
+          clearBtn.classList.remove("hidden");
+        }
+      });
+
+      document.getElementById("clear-music-btn").addEventListener("click", () => {
+        selectedMusicFile = null;
+        selectedMusicDataUrl = "";
+        document.getElementById("field-music-file").value = "";
+        document.getElementById("field-music-url").value = "";
+        document.getElementById("music-upload-status").classList.add("hidden");
+        document.getElementById("clear-music-btn").classList.add("hidden");
+      });
+
       // Hide Duplicate Warning on Name Edit
       document.getElementById("field-name").addEventListener("input", () => {
         document.getElementById("duplicate-warning").classList.add("hidden");
@@ -2328,6 +2528,25 @@
             finalPoster = selectedPosterDataUrl;
           }
 
+          const directMusicUrl = document.getElementById("field-music-url").value.trim();
+          const musicStatusEl = document.getElementById("music-upload-status");
+          let finalBgMusicUrl = "";
+
+          if (selectedMusicFile) {
+            if (hasValidCloudinaryConfig()) {
+              musicStatusEl.classList.remove("hidden");
+              finalBgMusicUrl = await uploadAudioToCloudinary(selectedMusicFile, (msg) => {
+                musicStatusEl.textContent = msg;
+              });
+            } else if (selectedMusicDataUrl) {
+              finalBgMusicUrl = selectedMusicDataUrl;
+            }
+          } else if (directMusicUrl && /^https?:\/\//i.test(directMusicUrl)) {
+            finalBgMusicUrl = directMusicUrl;
+          } else if (selectedMusicDataUrl) {
+            finalBgMusicUrl = selectedMusicDataUrl;
+          }
+
           if (editId) {
             const updatedFields = {
               name,
@@ -2340,7 +2559,8 @@
               audience,
               whereToWatch,
               watchDetail,
-              poster: finalPoster
+              poster: finalPoster,
+              bgMusicUrl: finalBgMusicUrl
             };
 
             if (isCloudConnected && firestoreApi && firestoreDb) {
@@ -2370,6 +2590,7 @@
               whereToWatch,
               watchDetail,
               poster: finalPoster,
+              bgMusicUrl: finalBgMusicUrl,
               addedAt: Date.now()
             };
 
@@ -2482,7 +2703,20 @@
 
       // Modal Close Buttons
       document.getElementById("close-detail-modal").addEventListener("click", () => {
+        stopReviewAudio();
         document.getElementById("detail-modal").classList.add("hidden");
+      });
+      document.getElementById("detail-modal").addEventListener("click", (e) => {
+        if (e.target.id === "detail-modal") {
+          stopReviewAudio();
+          document.getElementById("detail-modal").classList.add("hidden");
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !document.getElementById("detail-modal").classList.contains("hidden")) {
+          stopReviewAudio();
+          document.getElementById("detail-modal").classList.add("hidden");
+        }
       });
       document.getElementById("close-auth-modal").addEventListener("click", () => {
         document.getElementById("auth-modal").classList.add("hidden");
