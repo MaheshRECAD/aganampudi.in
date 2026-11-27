@@ -170,7 +170,6 @@
           <a href="#section-ott" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">OTT</a>
           <a href="#section-downloaded" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Downloaded</a>
           <a href="#section-bucket-list" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Bucket List</a>
-          <a href="#section-suggestions-table" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-amber-300 transition">Suggestions</a>
         </nav>
 
         <!-- Expandable Header Search Control -->
@@ -549,7 +548,7 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MAIN 3-TIER SHOWCASE FLOW + BUCKET LIST + SUGGESTIONS TABLE           -->
+  <!-- MAIN 3-TIER SHOWCASE FLOW + BUCKET LIST                             -->
   <!-- ===================================================================== -->
   <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14 flex-1">
 
@@ -701,39 +700,6 @@
       </div>
     </section>
 
-    <!-- =================================================================== -->
-    <!-- TIER 5: SUGGESTIONS TABLE (VOTE & SUGGESTION ENTRIES)               -->
-    <!-- =================================================================== -->
-    <section id="section-suggestions-table" class="scroll-mt-20 pb-8">
-      <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Visitor Votes &amp; Suggestions</span>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mt-0.5">Suggestions Table</h2>
-          <p class="text-xs sm:text-sm text-gray-400 mt-1">Everyone who added a vote of suggestion for an unwatched bucket-list movie.</p>
-        </div>
-        <span id="suggestions-table-count" class="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold">
-          0 Entries
-        </span>
-      </div>
-
-      <div class="glass-panel rounded-2xl overflow-x-auto border border-white/10">
-        <table class="w-full text-left border-collapse text-xs sm:text-sm min-w-[640px]">
-          <thead>
-            <tr class="bg-white/10 text-amber-300 uppercase text-[11px] tracking-wider">
-              <th class="py-3 px-4">#</th>
-              <th class="py-3 px-4">Movie</th>
-              <th class="py-3 px-4">Name</th>
-              <th class="py-3 px-4">Contact</th>
-              <th class="py-3 px-4">Total Votes</th>
-              <th class="py-3 px-4">Submitted At</th>
-            </tr>
-          </thead>
-          <tbody id="public-suggestions-tbody" class="divide-y divide-white/10 text-gray-200">
-            <!-- Populated dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </section>
 
   </main>
 
@@ -1823,7 +1789,6 @@
           (snapshot) => {
             suggestionsLog = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
             saveSuggestionsLog();
-            renderSuggestionsTableSection();
           },
           () => {}
         );
@@ -2412,41 +2377,6 @@
         .join("");
     }
 
-    function renderSuggestionsTableSection() {
-      const tbody = document.getElementById("public-suggestions-tbody");
-      const badge = document.getElementById("suggestions-table-count");
-      if (!tbody) return;
-
-      if (badge) {
-        badge.textContent = `${suggestionsLog.length} ${suggestionsLog.length === 1 ? "Entry" : "Entries"}`;
-      }
-
-      if (suggestionsLog.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="py-8 px-4 text-center text-gray-400 italic">
-              No votes or suggestions added yet. Search an unwatched bucket-list movie and click &lt;add your vote of suggestion&gt;.
-            </td>
-          </tr>`;
-        return;
-      }
-
-      tbody.innerHTML = suggestionsLog
-        .map(
-          (row, idx) => `
-          <tr class="hover:bg-white/5">
-            <td class="py-2.5 px-4 text-gray-400">${idx + 1}</td>
-            <td class="py-2.5 px-4 font-semibold text-white">${escapeHtml(row.movieName)}</td>
-            <td class="py-2.5 px-4 font-medium text-purple-300">${escapeHtml(row.suggestorName)}</td>
-            <td class="py-2.5 px-4 text-gray-300">${escapeHtml(row.suggestorContact)}</td>
-            <td class="py-2.5 px-4 font-bold text-amber-300">${escapeHtml(row.votesAtSubmission ?? 1)}</td>
-            <td class="py-2.5 px-4 text-gray-400 whitespace-nowrap">${escapeHtml(row.submittedAt || row.dateSuggested || formatDisplayDate(row.suggestedAt))}</td>
-          </tr>
-        `
-        )
-        .join("");
-    }
-
     function populateFilterOptions() {
       const genreSelect = document.getElementById("filter-genre");
       const yearSelect = document.getElementById("filter-year");
@@ -2611,7 +2541,6 @@
       render3x3Section("OTT", "ott-track", "ott-page-indicator", "ott-dots", "ott-dot");
       render3x3Section("Downloaded", "downloaded-track", "downloaded-page-indicator", "downloaded-dots", "dl-dot");
       renderBucketListSection();
-      renderSuggestionsTableSection();
       applySearchAndFilters();
     }
 
